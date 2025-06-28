@@ -11,7 +11,7 @@ export function filterStudents(
   return students.filter((student) => {
     switch (searchType) {
       case "name":
-        return student.name.toLowerCase().includes(searchValue.toLowerCase());
+        return student.studentName.toLowerCase().includes(searchValue.toLowerCase());
       case "phone":
         return student.contact.includes(searchValue);
       case "school":

@@ -1,143 +1,75 @@
-import { Search, CheckCircle, ChevronDown } from "lucide-react";
-import { Student } from "@/app/types/students";
-import { useRouter } from "next/navigation";
-import { useStudentContext } from "@/app/main/_context/StudentContext";
-import { useState, useRef, useEffect } from "react";
+"use client";
 
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { Student } from "@/app/types/students";
+import { SUBMISSION_STATUS, SubmissionStatus, ScoreSubmissionType } from "@/app/constants";
+import { Search } from "lucide-react";
+import { useStudentContext } from "@/app/context/StudentContext";
+import SubmissionStatusDropdown from "./SubmissionStatusDropdown";
+
+// Props 타입 정의
 interface StudentsRowProps {
     student: Student;
-    index: number;
-    scoreSubmitted_2?: boolean;
-    scoreSubmitted_3?: boolean;
-    scoreSubmitted_mockTest?: boolean;
-    isSelected?: boolean;
-    onSelect?: (checked: boolean) => void;
-    onUpdateGradeSubmission?: (type: 'gradeSubmission_2' | 'gradeSubmission_3' | 'gradeSubmission_mockTest', value: boolean) => void;
+    index: number; // 목록 번호
+    scoreSubmitted_2?: SubmissionStatus; // 2-2 성적 제출 상태
+    scoreSubmitted_3?: SubmissionStatus; // 3-1 성적 제출 상태
+    scoreSubmitted_mockTest?: SubmissionStatus; // 모의고사 제출 상태
+    isSelected?: boolean; // 체크박스 선택 여부
+    onSelect?: (checked: boolean) => void; // 체크박스 변경 핸들러
+    onUpdateScoreSubmission?: (type: ScoreSubmissionType, value: SubmissionStatus) => void; // 성적 제출 상태 변경 콜백
+    onOpenModal?: (student: Student, type: ScoreSubmissionType) => void; // 모달 열기 콜백
 }
 
-type SubmissionStatus = '미제출' | '입력중' | '완료';
-
-const statusOptions: SubmissionStatus[] = ['미제출', '입력중', '완료'];
-
+// 학생 테이블의 한 줄 컴포넌트
 export default function StudentsRow({
     student,
     index,
-    scoreSubmitted_2 = false,
-    scoreSubmitted_3 = false,
-    scoreSubmitted_mockTest = false,
+    scoreSubmitted_2 = SUBMISSION_STATUS.NOT_SUBMITTED,
+    scoreSubmitted_3 = SUBMISSION_STATUS.NOT_SUBMITTED,
+    scoreSubmitted_mockTest = SUBMISSION_STATUS.NOT_SUBMITTED,
     isSelected = false,
     onSelect,
-    onUpdateGradeSubmission
+    onUpdateScoreSubmission,
+    onOpenModal
 }: StudentsRowProps) {
     const router = useRouter();
-    const { setSelectedStudent } = useStudentContext();
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const { setSelectedStudent } = useStudentContext(); // context에 현재 학생 설정
+    const [openDropdown, setOpenDropdown] = useState<string | null>(null); // 드롭다운 열림 제어
+    const dropdownRef = useRef<HTMLDivElement>(null); // 외부 클릭 감지용
 
-    // 드롭다운 외부 클릭 시 닫기
+    // 드롭다운 외부 클릭 시 닫힘 처리
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setOpenDropdown(null);
             }
         };
-
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
 
-    const getStatusText = (isSubmitted: boolean): SubmissionStatus => {
-        return isSubmitted ? '완료' : '미제출';
-    };
-
-    const getStatusColor = (status: SubmissionStatus) => {
-        switch (status) {
-            case '완료':
-                return 'text-green-600 bg-green-100';
-            case '입력중':
-                return 'text-yellow-600 bg-yellow-100';
-            case '미제출':
-                return 'text-gray-400 bg-gray-100';
-            default:
-                return 'text-gray-400 bg-gray-100';
-        }
-    };
-
-    const SubmissionStatusDropdown = ({
-        label,
-        isSubmitted,
-        type
-    }: {
-        label: string;
-        isSubmitted: boolean;
-        type: 'gradeSubmission_2' | 'gradeSubmission_3' | 'gradeSubmission_mockTest';
-    }) => {
-        const currentStatus = getStatusText(isSubmitted);
-        const dropdownId = `${student.contact}-${type}`;
-
-        const handleStatusChange = (newStatus: SubmissionStatus) => {
-            const newValue = newStatus === '완료';
-            onUpdateGradeSubmission?.(type, newValue);
-            setOpenDropdown(null);
-        };
-
-        return (
-            <div className="flex items-center justify-center mb-1 last:mb-0 relative" ref={dropdownRef}>
-                <span className="text-sm text-gray-600 mr-4">{label}</span>
-                <div className="relative">
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setOpenDropdown(openDropdown === dropdownId ? null : dropdownId);
-                        }}
-                        className={`flex items-center px-2 py-1 rounded text-sm font-medium ${getStatusColor(currentStatus)} hover:opacity-80 transition-opacity`}
-                    >
-                        {currentStatus}
-                        <ChevronDown className="h-3 w-3 ml-1" />
-                    </button>
-
-                    {openDropdown === dropdownId && (
-                        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-10 min-w-24">
-                            {statusOptions.map((status) => (
-                                <button
-                                    key={status}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleStatusChange(status);
-                                    }}
-                                    className={`block w-full text-left px-3 py-2 text-sm hover:bg-gray-50 ${status === currentStatus ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
-                                        }`}
-                                >
-                                    {status}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
-    };
-
+    // 행 클릭 시 학생 상세 대시보드로 이동
     const handleRowClick = (e: React.MouseEvent) => {
-        // 체크박스 클릭 시에는 행 클릭 이벤트를 막음
-        if ((e.target as HTMLElement).tagName === 'INPUT') {
-            return;
-        }
+        if ((e.target as HTMLElement).tagName === 'INPUT') return; // 체크박스 클릭 방지
 
-        // 학생 정보를 context에 저장
-        setSelectedStudent(student);
-        // 대시보드로 이동
-        router.push(`/dashboard/${student.contact}`);
+        const target = e.target as HTMLElement;
+        const td = target.closest('td');
+        if (td && td.cellIndex === 7) return; // 성적 제출 셀은 클릭 무시
+
+        setSelectedStudent(student); // context에 저장
+        router.push(`/dashboard/${student.contact}`); // 라우터 이동
     };
 
     const handleCheckboxClick = (e: React.MouseEvent) => {
-        e.stopPropagation(); // 행 클릭 이벤트 전파 방지
+        e.stopPropagation(); // 행 클릭 방지
     };
 
     return (
         <tr onClick={handleRowClick} className="border-t hover:bg-gray-50 text-center cursor-pointer">
+            {/* 체크박스 */}
             <td className="px-4 py-3 text-center" onClick={handleCheckboxClick}>
                 <input
                     type="checkbox"
@@ -146,37 +78,62 @@ export default function StudentsRow({
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                 />
             </td>
+
+            {/* 번호 */}
             <td className="px-4 py-3 font-medium">{index + 1}</td>
-            <td className="px-4 py-3 font-semibold ">{student.studentName}</td>
+
+            {/* 이름 */}
+            <td className="px-4 py-3 font-semibold">{student.studentName}</td>
+
+            {/* 연락처 */}
             <td className="px-4 py-3">{student.contact}</td>
+
+            {/* 현재 학교 */}
             <td className="px-4 py-3">{student.currentSchool}</td>
+
+            {/* 희망 학교 */}
             <td className="px-4 py-3">{student.desiredSchool}</td>
+
+            {/* 희망 학과 */}
             <td className="px-4 py-3">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-800">
                     {student.desiredMajor}
                 </span>
             </td>
+
+            {/* 성적 제출 상태 드롭다운 */}
             <td className="px-4 py-3">
-                <div className="text-left max-w-48">
+                <div className="text-left w-full">
                     <SubmissionStatusDropdown
                         label="2-2 성적"
-                        isSubmitted={scoreSubmitted_2}
-                        type="gradeSubmission_2"
+                        status={scoreSubmitted_2}
+                        type="scoreSubmission_2"
+                        student={student}
+                        onChange={onUpdateScoreSubmission || (() => { })}
+                        onOpenModal={onOpenModal || (() => { })}
                     />
                     <SubmissionStatusDropdown
                         label="3-1 성적"
-                        isSubmitted={scoreSubmitted_3}
-                        type="gradeSubmission_3"
+                        status={scoreSubmitted_3}
+                        type="scoreSubmission_3"
+                        student={student}
+                        onChange={onUpdateScoreSubmission || (() => { })}
+                        onOpenModal={onOpenModal || (() => { })}
                     />
                     <SubmissionStatusDropdown
                         label="모의고사"
-                        isSubmitted={scoreSubmitted_mockTest}
-                        type="gradeSubmission_mockTest"
+                        status={scoreSubmitted_mockTest}
+                        type="scoreSubmission_mockTest"
+                        student={student}
+                        onChange={onUpdateScoreSubmission || (() => { })}
+                        onOpenModal={onOpenModal || (() => { })}
                     />
                 </div>
             </td>
+
+            {/* 내보내기 버튼 */}
             <td className="px-4 py-3">
-                <button className="px-3 py-1.5 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                <button className="px-3 py-1.5 bg-gray-600 text-white rounded hover:bg-black transition-colors">
                     내보내기
                 </button>
             </td>
@@ -184,6 +141,7 @@ export default function StudentsRow({
     );
 }
 
+// 검색 결과 없음 상태 시 렌더링되는 빈 행
 export function EmptyStudentsRow({ columnCount }: { columnCount?: number }) {
     return (
         <tr>
