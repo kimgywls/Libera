@@ -1,6 +1,8 @@
-# Libera App - 학생 관리 시스템
+# Libera App
 
-학생 정보와 성적 제출 상태를 관리하는 Next.js 기반 웹 애플리케이션입니다.
+학생의 내신 성적과 모의고사 데이터를 바탕으로,
+대학별 합격자 및 전형 기준 정보를 비교 분석하여
+AI 기반으로 진학 가능성이 높은 대학 리스트를 예측하는 시스템입니다.
 
 ## 🚀 주요 기능
 
@@ -40,7 +42,7 @@ libera_app/
 │   │   │   ├── _actions/            # 서버 액션
 │   │   │   │   ├── fetch-all-students.ts
 │   │   │   │   └── fetch-students-score-submission.ts
-│   │   │   ├── _components/         # 컴포넌트
+│   │   │   ├── _components/         # UI 구성 요소
 │   │   │   │   ├── StudentsListWidget.tsx
 │   │   │   │   ├── StudentsTable.tsx
 │   │   │   │   ├── StudentsRow.tsx
