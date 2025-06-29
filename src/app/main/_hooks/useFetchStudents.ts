@@ -12,7 +12,7 @@ export function useFetchStudents() {
         try {
             const data = await getStudentsAction();
             setStudents(data);
-        } catch (e) {
+        } catch {
             setError("불러오기 실패");
         } finally {
             setLoading(false);

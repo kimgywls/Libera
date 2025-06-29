@@ -24,13 +24,10 @@ const tableHeaders = [
 
 interface StudentsTableProps {
   students: Student[];
-  loading: boolean;
-  error: string | null;
-  reload: () => void;
 }
 
 // 메인 StudentsTable 컴포넌트
-export default function StudentsTable({ students, loading, error, reload }: StudentsTableProps) {
+export default function StudentsTable({ students }: StudentsTableProps) {
   const { scoreSubmissions, updateScoreSubmission } = useFetchScoreSubmissions();
   const { studentsWithStatus } = useStudentsWithStatus(students, scoreSubmissions);
 
@@ -63,24 +60,6 @@ export default function StudentsTable({ students, loading, error, reload }: Stud
 
   // 모달 설정
   const modalConfig = currentStudent ? getModalConfig(currentStudent, currentType) : null;
-
-  if (error) {
-    return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex flex-col items-center justify-center h-32 space-y-2">
-          <div className="text-red-500">오류: {error}</div>
-          {reload && (
-            <button
-              onClick={reload}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              다시 시도
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>

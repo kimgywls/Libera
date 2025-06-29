@@ -11,17 +11,21 @@ import {
 } from 'lucide-react';
 import { useParams } from "next/navigation";
 import { useFetchStudents } from "@/app/main/_hooks/useFetchStudents";
-import { useStudentContext } from "../context/StudentContext";
+import { ReactNode } from "react";
 
 // 타입 정의
 interface NavItem {
     name: string;
     href: string;
-    icon: any;
+    icon: React.ComponentType<{ className?: string }>;
     description: string;
 }
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+interface DashboardLayoutProps {
+    children: ReactNode;
+}
+
+const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     const pathname = usePathname();
     const router = useRouter();
     const { id } = useParams();

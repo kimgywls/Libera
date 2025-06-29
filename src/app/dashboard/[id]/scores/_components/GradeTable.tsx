@@ -2,7 +2,6 @@
 
 import { ScoreRowData, SubjectType } from "@/app/types/scores";
 import GradeRow from "./GradeRow";
-import { useModal } from "@/app/hooks/useModal"; // 커스텀 훅 사용
 
 interface GradeTableProps {
     semester: string;
@@ -22,7 +21,6 @@ export default function GradeTable({
         (g) => g.semester === semester && g.subjectType === subjectType
     );
 
-    const hasData = filteredGrades.length > 0;
 
     let headers: string[] = [];
     if (subjectType === "일반선택") {

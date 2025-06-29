@@ -20,7 +20,11 @@ export const useStudentSelection = (students: Student[]) => {
     function handleSelectStudent(contact: string, checked: boolean) {
         setSelectedStudents(prev => {
             const next = new Set(prev);
-            checked ? next.add(contact) : next.delete(contact);
+            if (checked) {
+                next.add(contact);
+            } else {
+                next.delete(contact);
+            }
             return next;
         });
     }
@@ -28,7 +32,6 @@ export const useStudentSelection = (students: Student[]) => {
     // 선택 상태 계산
     const isAllSelected = students.length > 0 && students.every(student => selectedStudents.has(student.contact));
     const isIndeterminate = selectedStudents.size > 0 && selectedStudents.size < students.length;
-    const selectedCount = selectedStudents.size;
 
     return {
         selectedStudents,
@@ -36,6 +39,5 @@ export const useStudentSelection = (students: Student[]) => {
         handleSelectStudent,
         isAllSelected,
         isIndeterminate,
-        selectedCount,
     };
 };

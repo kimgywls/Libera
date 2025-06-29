@@ -51,8 +51,6 @@ export default function ScoreSubmission2Modal({
             onSave={handleSave}
         >
             <ScoreSubmission2
-                studentName={student?.studentName || ""}
-                contact={student?.contact || ""}
                 onDataChange={(data, isValid) => {
                     console.log("2-2 제출 데이터:", data, isValid);
                     setIsFormValid(isValid); // 유효성 상태 저장

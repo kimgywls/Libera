@@ -2,9 +2,6 @@
 
 import { StudentScoreSubmission, SUBMISSION_STATUS } from "../../constants";
 
-// 실제 API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
 // 목데이터
 const mockStudentsScoreSubmission: StudentScoreSubmission[] = [
   {

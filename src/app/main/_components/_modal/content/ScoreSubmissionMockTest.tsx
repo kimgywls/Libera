@@ -52,7 +52,7 @@ export default function ScoreSubmissionMockTest({
     );
 
     // 상태 변경 시 상위 컴포넌트로 데이터 전달
-    const emitData = (newFormData = formData, newScores = mockTestData) => {
+    const emitData = (newScores = mockTestData) => {
         const data: MockTestSubmissionData = {
             studentId: "", // studentId는 상위에서 전달받아야 함
             scores: newScores,
@@ -64,7 +64,7 @@ export default function ScoreSubmissionMockTest({
     const handleFormChange = (key: keyof typeof formData, value: string) => {
         const newFormData = { ...formData, [key]: value };
         setFormData(newFormData);
-        emitData(newFormData, mockTestData); // 변경된 값 즉시 전달
+        emitData(); // 변경된 값 즉시 전달
     };
 
     // 과목 등급 등 일반 필드 업데이트 처리
@@ -77,7 +77,7 @@ export default function ScoreSubmissionMockTest({
             },
         };
         setMockTestData(newScores);
-        emitData(formData, newScores);
+        emitData(newScores);
     };
 
     // 탐구 영역이 바뀌면 과목/등급 초기화
@@ -96,7 +96,7 @@ export default function ScoreSubmissionMockTest({
             },
         };
         setMockTestData(newScores);
-        emitData(formData, newScores);
+        emitData(newScores);
     };
 
     return (

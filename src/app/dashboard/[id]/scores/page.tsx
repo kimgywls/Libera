@@ -31,15 +31,14 @@ export default function ScoresPage() {
 
     // 에러가 발생한 경우
     if (gradesError) {
-        return <ErrorState error={gradesError} />;
+        return <ErrorState message={gradesError} />;
     }
 
     // 성적 데이터가 없는 경우
     if (!studentGrades) {
         return (
             <NoGradesMessage
-                studentName={currentStudent.studentName}
-                schoolName={currentStudent.currentSchool}
+                message={`${currentStudent.studentName} 학생의 성적 데이터가 없습니다.`}
             />
         );
     }

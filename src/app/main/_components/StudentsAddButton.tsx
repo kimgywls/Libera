@@ -18,6 +18,12 @@ export default function StudentsAddButton() {
         }
     };
 
+    // 임시 학생 객체 (id 포함)
+    const tempStudent = {
+        ...defaultStudent,
+        id: "temp"
+    };
+
     return (
         <div className="">
             <button
@@ -30,7 +36,7 @@ export default function StudentsAddButton() {
             <ScoreSubmission2Modal
                 isOpen={isOpen}
                 onClose={close}
-                student={defaultStudent}
+                student={tempStudent}
                 onSubmit={handlePdfSubmit}
             />
         </div>

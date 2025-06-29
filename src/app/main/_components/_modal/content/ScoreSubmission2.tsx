@@ -5,15 +5,11 @@ import { PdfSubmissionData } from "@/app/types/scores";
 
 // 컴포넌트 Props 정의
 interface ScoreSubmission2Props {
-    contact: string; // 학생 연락처
-    studentName: string; // 학생 이름
     onDataChange?: (data: PdfSubmissionData, isValid: boolean) => void; // 상위로 데이터 전달 콜백
 }
 
 // PDF 파일 업로드 컴포넌트
 export default function ScoreSubmission2({
-    contact,
-    studentName,
     onDataChange
 }: ScoreSubmission2Props) {
     const [file, setFile] = useState<File | null>(null); // 업로드된 파일 상태

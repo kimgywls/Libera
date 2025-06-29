@@ -1,29 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { MainPageButton } from "@/app/components";
+import { FileText } from "lucide-react";
 
 interface NoGradesMessageProps {
-    studentName: string;
-    schoolName: string;
+    message?: string;
 }
 
-export default function NoGradesMessage({ studentName, schoolName }: NoGradesMessageProps) {
-    const router = useRouter();
-
+export default function NoGradesMessage({ message = "성적 데이터가 없습니다." }: NoGradesMessageProps) {
     return (
-        <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">교과 성적</h1>
-                    <p className="text-gray-600 mb-4">{studentName} - {schoolName}</p>
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <p className="text-yellow-800">PDF 성적표가 아직 업로드되지 않았습니다.</p>
-                        <p className="text-yellow-700 text-sm mt-1">메인 페이지에서 성적표를 업로드해주세요.</p>
-                    </div>
-                    <MainPageButton />
-                </div>
-            </div>
+        <div className="flex flex-col items-center justify-center p-8 text-center">
+            <FileText className="w-12 h-12 text-gray-400 mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">성적 없음</h2>
+            <p className="text-gray-600">{message}</p>
         </div>
     );
 } 

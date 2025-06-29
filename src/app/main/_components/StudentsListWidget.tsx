@@ -8,7 +8,7 @@ import { Student } from "@/app/types/students";
 
 // 전체 학생 목록 위젯 컴포넌트
 export default function StudentsListWidget() {
-    const { students, loading, error, reload } = useFetchStudents(); // 전체 학생 데이터 fetch
+    const { students } = useFetchStudents(); // 전체 학생 데이터 fetch
     const [filteredStudents, setFilteredStudents] = useState<Student[]>([]); // 검색 필터 적용 결과
 
     // 최초 로딩 or students 변경 시 전체 학생 목록으로 초기화
@@ -33,9 +33,6 @@ export default function StudentsListWidget() {
                 {/* 테이블 (필터링된 학생들 보여줌) */}
                 <StudentsTable
                     students={filteredStudents}
-                    loading={loading}
-                    error={error}
-                    reload={reload}
                 />
             </section>
         </div>

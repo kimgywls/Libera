@@ -1,6 +1,6 @@
 "use client";
 
-import { MockTestSubmissionData, ScoreRowData, SubjectType, MonthlyMockTestScore } from "@/app/types/scores";
+import { MockTestSubmissionData, ScoreRowData, SubjectType } from "@/app/types/scores";
 import { Month } from "@/app/constants";
 import { Student } from "@/app/types/students";
 import GradeTable from "./GradeTable";

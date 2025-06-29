@@ -2,9 +2,6 @@
 
 import { Student } from "@/app/types/students";
 
-// 실제 API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
 // 목데이터
 const mockStudents: Student[] = [
   {
@@ -47,7 +44,7 @@ export const getStudentsAction = async () => {
   return mockStudents;
 };
 
-export const createStudentAction = async (student: Student) => {
+export const createStudentAction = async (mockStudents: Student) => {
   // 추후 fetch("/api/students") 등으로 대체 예정
   return mockStudents;
 };

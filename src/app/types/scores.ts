@@ -113,7 +113,7 @@ export interface ScoreSubmissionStatus {
 
 
 // 파싱된 성적 데이터 타입 정의
-export interface ParsedGradeData {
+export interface StudentGradeData {
   studentId: string;      // 학생 ID
   grades: ScoreRowData[];    // 교과 성적
   mockTests: MonthlyMockTestScore[]; // 모의고사 성적

@@ -50,7 +50,7 @@ export default function ScoreSubmission3Table({ onDataChange, initialScores }: S
                 {/* 각 행(과목) 렌더링 */}
                 {rows.map((row, index) => (
                     <ScoreSubmission3Row
-                        index={index}
+                        key={index}
                         data={row}
                         onChange={(data) => handleRowChange(index, data)}
                     />

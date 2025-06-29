@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getStudentAllScores } from "../_actions/fetch-parsed-grades";
 import { ScoreRowData, MockTestSubmissionData } from "../../types/scores";
 
@@ -13,7 +13,7 @@ export function useStudentAllScores(studentId: string) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchStudentGrades = async () => {
+    const fetchStudentGrades = useCallback(async () => {
         if (!studentId) {
             setStudentGrades(null);
             setLoading(false);
@@ -31,11 +31,11 @@ export function useStudentAllScores(studentId: string) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [studentId]);
 
     useEffect(() => {
         fetchStudentGrades();
-    }, [studentId]);
+    }, [fetchStudentGrades]);
 
     return {
         studentGrades,

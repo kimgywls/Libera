@@ -23,25 +23,25 @@ export default function ScoreSubmission3({
 
     const [tableData, setTableData] = useState<ScoreRowData[]>(initialScores || []);
 
-    const isDataValid = (form: typeof formData, rows: ScoreRowData[]) => {
+    const isDataValid = (form: typeof formData) => {
         return form.studentName.trim() !== "" && form.contact.trim() !== "";
     };
 
     const handleStudentNameChange = (name: string) => {
         const next = { ...formData, studentName: name };
         setFormData(next);
-        onDataChange?.({ type: "table", data: { ...next, rows: tableData } }, isDataValid(next, tableData));
+        onDataChange?.({ type: "table", data: { ...next, rows: tableData } }, isDataValid(next));
     };
 
     const handleContactChange = (contact: string) => {
         const next = { ...formData, contact };
         setFormData(next);
-        onDataChange?.({ type: "table", data: { ...next, rows: tableData } }, isDataValid(next, tableData));
+        onDataChange?.({ type: "table", data: { ...next, rows: tableData } }, isDataValid(next));
     };
 
     const handleTableChange = (rows: ScoreRowData[]) => {
         setTableData(rows);
-        onDataChange?.({ type: "table", data: { ...formData, rows } }, isDataValid(formData, rows));
+        onDataChange?.({ type: "table", data: { ...formData, rows } }, isDataValid(formData));
     };
 
     return (

@@ -5,14 +5,12 @@ import GradeSelect from "../../form/GradeSelect";
 
 // 각 행의 Props: 현재 데이터와 변경 핸들러
 interface ScoreSubmission3RowProps {
-    index: number; // 행 번호
     data: ScoreRowData; // 하나의 성적 행 데이터
     onChange: (newData: ScoreRowData) => void; // 해당 행의 값 변경 시 상위로 전달
-
 }
 
 // 한 줄짜리 성적 입력 UI 컴포넌트
-export default function ScoreSubmission3Row({ index, data, onChange }: ScoreSubmission3RowProps) {
+export default function ScoreSubmission3Row({ data, onChange }: ScoreSubmission3RowProps) {
     // 공통 핸들러: 특정 필드의 값을 수정
     const handleChange = (field: keyof ScoreRowData, value: string) => {
         onChange({ ...data, [field]: value });

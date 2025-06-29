@@ -1,7 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import { Student } from "@/app/types/students";
 import {
-    User,
     School,
     Target,
     BookOpen,
@@ -11,10 +12,16 @@ import {
     Calendar
 } from "lucide-react";
 
-export default function StudentInfo({ student }: { student: Student }) {
-    const [selectedDate, setSelectedDate] = useState<string>("");
-    const [isSelectingDate, setIsSelectingDate] = useState(false);
-    const [consultationDate, setConsultationDate] = useState<string | undefined>(student.consultationDate);
+interface StudentInfoProps {
+    student: Student;
+}
+
+export default function StudentInfo({ student }: StudentInfoProps) {
+    const [consultationDate, setConsultationDate] = useState(student.consultationDate || "");
+
+    const handleConsultationDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConsultationDate(e.target.value);
+    };
 
     // 상담 날짜 포맷팅 함수
     const formatDate = (dateString: string) => {
@@ -29,11 +36,9 @@ export default function StudentInfo({ student }: { student: Student }) {
 
     // 상담 일정 저장 함수 (실제로는 API 호출이 필요)
     const handleSaveConsultation = () => {
-        if (selectedDate) {
+        if (consultationDate) {
             // 여기서 API 호출로 상담 일정 저장
-            console.log('상담 일정 저장:', selectedDate);
-            setConsultationDate(selectedDate);
-            setIsSelectingDate(false);
+            console.log('상담 일정 저장:', consultationDate);
             // 실제로는 student 객체를 업데이트하거나 부모 컴포넌트에 알려야 함
         }
     };
@@ -74,8 +79,8 @@ export default function StudentInfo({ student }: { student: Student }) {
                                             <input
                                                 type="date"
                                                 className="border rounded px-2 py-1 text-gray-700 w-full"
-                                                value={selectedDate}
-                                                onChange={e => setSelectedDate(e.target.value)}
+                                                value={consultationDate}
+                                                onChange={handleConsultationDateChange}
                                             />
                                             <button
                                                 className="px-2 py-2 text-gray-500 text-bold rounded-md hover:bg-green-100 whitespace-nowrap"
