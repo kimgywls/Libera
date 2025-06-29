@@ -15,6 +15,7 @@ interface ScoreSubmissionMockTestProps {
     contact: string;             // 학생 연락처 (기본값)
     studentName: string;         // 학생 이름 (기본값)
     onDataChange?: (data: MockTestSubmissionData) => void; // 상위로 제출 데이터 전달 콜백
+    initialScores?: Partial<Record<Month, MonthlyMockTestScore>>; // 초기 모의고사 데이터 (수정 시 사용)
 }
 
 // 모의고사 성적 입력 컴포넌트
@@ -22,6 +23,7 @@ export default function ScoreSubmissionMockTest({
     contact,
     studentName,
     onDataChange,
+    initialScores,
 }: ScoreSubmissionMockTestProps) {
     // 학생 기본 정보 상태 (이름, 연락처)
     const [formData, setFormData] = useState({
@@ -31,17 +33,28 @@ export default function ScoreSubmissionMockTest({
 
     // 월별 모의고사 성적 상태 초기화
     const [mockTestData, setMockTestData] = useState<Record<Month, MonthlyMockTestScore>>(
-        () =>
-            Object.fromEntries(
+        () => {
+            if (initialScores) {
+                // 초기 데이터가 있으면 사용, 없으면 기본값
+                const result = Object.fromEntries(
+                    MOCK_TEST_MONTHS.map((month) => [
+                        month,
+                        initialScores[month] || { ...defaultMonthlyScore }
+                    ])
+                ) as Record<Month, MonthlyMockTestScore>;
+                return result;
+            }
+            // 초기 데이터가 없으면 기본값으로 초기화
+            return Object.fromEntries(
                 MOCK_TEST_MONTHS.map((month) => [month, { ...defaultMonthlyScore }])
-            ) as Record<Month, MonthlyMockTestScore>
+            ) as Record<Month, MonthlyMockTestScore>;
+        }
     );
 
     // 상태 변경 시 상위 컴포넌트로 데이터 전달
     const emitData = (newFormData = formData, newScores = mockTestData) => {
         const data: MockTestSubmissionData = {
-            studentName: newFormData.studentName,
-            contact: newFormData.contact,
+            studentId: "", // studentId는 상위에서 전달받아야 함
             scores: newScores,
         };
         onDataChange?.(data); // 변경 데이터 상위에 전달

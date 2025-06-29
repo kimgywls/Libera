@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Student } from "@/app/types/students";
 import { SUBMISSION_STATUS, SubmissionStatus, ScoreSubmissionType } from "@/app/constants";
 import { Search } from "lucide-react";
-import { useStudentContext } from "@/app/context/StudentContext";
-import SubmissionStatusDropdown from "./SubmissionStatusDropdown";
+import SubmissionStatusBadge from "./SubmissionStatusBadge";
 
 // Props 타입 정의
 interface StudentsRowProps {
@@ -34,22 +32,6 @@ export default function StudentsRow({
     onOpenModal
 }: StudentsRowProps) {
     const router = useRouter();
-    const { setSelectedStudent } = useStudentContext(); // context에 현재 학생 설정
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null); // 드롭다운 열림 제어
-    const dropdownRef = useRef<HTMLDivElement>(null); // 외부 클릭 감지용
-
-    // 드롭다운 외부 클릭 시 닫힘 처리
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setOpenDropdown(null);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
 
     // 행 클릭 시 학생 상세 대시보드로 이동
     const handleRowClick = (e: React.MouseEvent) => {
@@ -59,8 +41,7 @@ export default function StudentsRow({
         const td = target.closest('td');
         if (td && td.cellIndex === 7) return; // 성적 제출 셀은 클릭 무시
 
-        setSelectedStudent(student); // context에 저장
-        router.push(`/dashboard/${student.contact}`); // 라우터 이동
+        router.push(`/dashboard/${student.id}/scores`); // scores 페이지로 이동
     };
 
     const handleCheckboxClick = (e: React.MouseEvent) => {
@@ -104,7 +85,7 @@ export default function StudentsRow({
             {/* 성적 제출 상태 드롭다운 */}
             <td className="px-4 py-3">
                 <div className="text-left w-full">
-                    <SubmissionStatusDropdown
+                    <SubmissionStatusBadge
                         label="2-2 성적"
                         status={scoreSubmitted_2}
                         type="scoreSubmission_2"
@@ -112,7 +93,7 @@ export default function StudentsRow({
                         onChange={onUpdateScoreSubmission || (() => { })}
                         onOpenModal={onOpenModal || (() => { })}
                     />
-                    <SubmissionStatusDropdown
+                    <SubmissionStatusBadge
                         label="3-1 성적"
                         status={scoreSubmitted_3}
                         type="scoreSubmission_3"
@@ -120,7 +101,7 @@ export default function StudentsRow({
                         onChange={onUpdateScoreSubmission || (() => { })}
                         onOpenModal={onOpenModal || (() => { })}
                     />
-                    <SubmissionStatusDropdown
+                    <SubmissionStatusBadge
                         label="모의고사"
                         status={scoreSubmitted_mockTest}
                         type="scoreSubmission_mockTest"

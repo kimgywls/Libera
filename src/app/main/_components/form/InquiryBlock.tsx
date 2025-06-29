@@ -2,6 +2,12 @@ import React from "react";
 import { inquiryOptions } from "@/app/constants"; // 과학/사회 과목 옵션들
 import GradeSelect from "./GradeSelect"; // 등급 선택 드롭다운
 
+// 한글-영어 매핑
+const typeMapping = {
+    '과학': 'science',
+    '사회': 'social',
+} as const;
+
 // Props 정의
 interface InquiryBlockProps {
     inquiryNumber: '1' | '2';          // 탐구 1 or 탐구 2
@@ -25,6 +31,10 @@ export default function InquiryBlock({
     onSubjectChange,
     onGradeChange,
 }: InquiryBlockProps) {
+
+    // 한글 type을 영어로 변환
+    const englishType = typeMapping[type as keyof typeof typeMapping] || '';
+
     return (
         // 기본적으로 flex-row / border 여부는 prop으로 결정
         <div className={`flex flex-row gap-1 ${hasBorder ? 'p-3 border border-gray-300 rounded-md' : ''}`}>
@@ -34,8 +44,14 @@ export default function InquiryBlock({
                     탐구{inquiryNumber} 영역
                 </label>
                 <select
-                    value={type}
-                    onChange={(e) => onTypeChange(e.target.value)}
+                    value={englishType}
+                    onChange={(e) => {
+                        // 영어 값을 한글로 변환하여 전달
+                        const englishValue = e.target.value;
+                        const koreanValue = englishValue === 'science' ? '과학' :
+                            englishValue === 'social' ? '사회' : '';
+                        onTypeChange(koreanValue);
+                    }}
                     className="w-full border border-gray-400 rounded-md px-1.5 py-2 text-sm"
                 >
                     <option value="">영역 선택</option>
@@ -45,7 +61,7 @@ export default function InquiryBlock({
             </div>
 
             {/* 영역이 선택되었을 경우: 과목 선택 */}
-            {type && (
+            {englishType && (englishType === 'science' || englishType === 'social') && (
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                         탐구{inquiryNumber} 과목
@@ -56,7 +72,7 @@ export default function InquiryBlock({
                         className="w-full border border-gray-400 rounded-md px-1.5 py-2 text-sm"
                     >
                         <option value="">과목 선택</option>
-                        {inquiryOptions[type as 'science' | 'social'].map((opt) => (
+                        {inquiryOptions[englishType as 'science' | 'social']?.map((opt) => (
                             <option key={opt.value} value={opt.label}>
                                 {opt.label}
                             </option>

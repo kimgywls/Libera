@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getStudentsScoreSubmission } from "@/app/main/_actions/fetch-students-score-submission";
+import { getStudentsScoreSubmission } from "@/app/main/_actions/fetch-students-submission-status";
 import { StudentScoreSubmission, SubmissionStatus, SUBMISSION_STATUS, ScoreSubmissionType, SCORE_SUBMISSION_TYPE } from "@/app/constants";
 
 // 성적 제출 데이터를 가져오는 훅

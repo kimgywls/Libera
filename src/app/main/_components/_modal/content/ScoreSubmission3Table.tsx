@@ -8,13 +8,16 @@ import { CirclePlus } from "lucide-react";
 // 성적 테이블 Props 정의
 interface ScoreSubmission3TableProps {
     onDataChange?: (data: ScoreRowData[]) => void; // 행 데이터 전체가 변경되면 상위에 전달
+    initialScores?: ScoreRowData[]; // 초기 성적 데이터
 }
 
 // 성적 입력 테이블 컴포넌트
-export default function ScoreSubmission3Table({ onDataChange }: ScoreSubmission3TableProps) {
-    // 초기 5개 행을 기본값으로 세팅
+export default function ScoreSubmission3Table({ onDataChange, initialScores }: ScoreSubmission3TableProps) {
+    // 초기 데이터가 있으면 사용, 없으면 기본 5개 행
     const [rows, setRows] = useState<ScoreRowData[]>(
-        Array.from({ length: 5 }, () => ({ ...defaultScoreRowData }))
+        initialScores && initialScores.length > 0
+            ? initialScores
+            : Array.from({ length: 5 }, () => ({ ...defaultScoreRowData }))
     );
 
     // 특정 행이 수정되었을 때 처리
@@ -36,14 +39,18 @@ export default function ScoreSubmission3Table({ onDataChange }: ScoreSubmission3
 
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-3">3학년 1학기 성적 입력</h2>
+            <h2 className="text-lg font-semibold mb-3">성적 입력
+                <span className="text-sm text-gray-500 ml-2">
+                    {initialScores?.length}개의 과목이 있습니다.
+                </span>
+            </h2>
 
             {/* 스크롤 가능한 테이블 영역 */}
             <div className="max-h-[400px] overflow-y-auto rounded px-3 space-y-2">
                 {/* 각 행(과목) 렌더링 */}
                 {rows.map((row, index) => (
                     <ScoreSubmission3Row
-                        key={index}
+                        index={index}
                         data={row}
                         onChange={(data) => handleRowChange(index, data)}
                     />

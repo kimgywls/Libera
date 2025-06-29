@@ -34,7 +34,7 @@ export default function SubmitModal({
             case "medium":
                 return "w-full max-w-xl";
             case "large":
-                return "w-full max-w-4xl";
+                return "w-full max-w-5xl";
             case "xlarge":
                 return "w-full max-w-6xl";
             default:

@@ -7,19 +7,21 @@ interface ScoreSubmission3Props {
     contact: string;
     studentName: string;
     onDataChange?: (data: ScoreSubmissionData, isValid: boolean) => void;
+    initialScores?: ScoreRowData[];
 }
 
 export default function ScoreSubmission3({
     contact,
     studentName,
     onDataChange,
+    initialScores,
 }: ScoreSubmission3Props) {
     const [formData, setFormData] = useState({
         studentName: studentName || "",
         contact: contact || "",
     });
 
-    const [tableData, setTableData] = useState<ScoreRowData[]>([]);
+    const [tableData, setTableData] = useState<ScoreRowData[]>(initialScores || []);
 
     const isDataValid = (form: typeof formData, rows: ScoreRowData[]) => {
         return form.studentName.trim() !== "" && form.contact.trim() !== "";
@@ -50,7 +52,10 @@ export default function ScoreSubmission3({
                 onStudentNameChange={handleStudentNameChange}
                 onContactChange={handleContactChange}
             />
-            <ScoreSubmission3Table onDataChange={handleTableChange} />
+            <ScoreSubmission3Table
+                onDataChange={handleTableChange}
+                initialScores={initialScores}
+            />
         </div>
     );
 }

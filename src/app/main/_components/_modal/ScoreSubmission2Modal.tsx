@@ -20,7 +20,7 @@ export default function ScoreSubmission2Modal({
     onClose,
     student,
     onSubmit,
-    onSave
+    onSave,
 }: ScoreSubmission2ModalProps) {
     const [isFormValid, setIsFormValid] = useState(false); // 3-1 성적 데이터 유효성 상태
     const modalConfig = getModalConfig(student as Student, SCORE_SUBMISSION_TYPE.SCORE_SUBMISSION_2); // 모달 설정값 동적 구성 (타이틀, 설명 등)

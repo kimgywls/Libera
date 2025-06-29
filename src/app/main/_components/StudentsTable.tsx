@@ -5,7 +5,7 @@ import { Student } from "@/app/types/students";
 import { SUBMISSION_STATUS, SubmissionStatus, ScoreSubmissionType, SCORE_SUBMISSION_TYPE } from "@/app/constants";
 import { getModalConfig } from "../_utils/submitModalConfig";
 import ScoreSubmissionModals from "./_modal/ScoreSubmissionModals";
-import { useModal } from "../../hook/useModal";
+import { useModal } from "../../hooks/useModal";
 import { useStudentSelection } from "../_hooks/useStudentSelection";
 import { useStudentsWithStatus } from "../_hooks/useStudentsWithStatus";
 import { useState } from "react";

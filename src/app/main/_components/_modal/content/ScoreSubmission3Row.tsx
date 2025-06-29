@@ -5,12 +5,14 @@ import GradeSelect from "../../form/GradeSelect";
 
 // 각 행의 Props: 현재 데이터와 변경 핸들러
 interface ScoreSubmission3RowProps {
+    index: number; // 행 번호
     data: ScoreRowData; // 하나의 성적 행 데이터
     onChange: (newData: ScoreRowData) => void; // 해당 행의 값 변경 시 상위로 전달
+
 }
 
 // 한 줄짜리 성적 입력 UI 컴포넌트
-export default function ScoreSubmission3Row({ data, onChange }: ScoreSubmission3RowProps) {
+export default function ScoreSubmission3Row({ index, data, onChange }: ScoreSubmission3RowProps) {
     // 공통 핸들러: 특정 필드의 값을 수정
     const handleChange = (field: keyof ScoreRowData, value: string) => {
         onChange({ ...data, [field]: value });
@@ -32,6 +34,7 @@ export default function ScoreSubmission3Row({ data, onChange }: ScoreSubmission3
                 >
                     <option value="일반선택">일반선택</option>
                     <option value="진로선택">진로선택</option>
+                    <option value="체육/예술">체육/예술</option>
                 </select>
             </div>
 
@@ -58,7 +61,7 @@ export default function ScoreSubmission3Row({ data, onChange }: ScoreSubmission3
                 label="원점수"
                 type="number"
                 placeholder="원점수"
-                value={data.rawScore}
+                value={data.rawScore?.toString() || ""}
                 onChange={(value) => handleChange("rawScore", value)}
             />
 
@@ -67,8 +70,8 @@ export default function ScoreSubmission3Row({ data, onChange }: ScoreSubmission3
                 label="평균"
                 type="number"
                 placeholder="평균"
-                value={data.average}
-                onChange={(value) => handleChange("average", value)}
+                value={data.averageSubject?.toString() || ""}
+                onChange={(value) => handleChange("averageSubject", value)}
             />
 
             {/* 단위 수 입력 */}
@@ -76,7 +79,7 @@ export default function ScoreSubmission3Row({ data, onChange }: ScoreSubmission3
                 label="단위 수"
                 type="number"
                 placeholder="단위 수"
-                value={data.unit}
+                value={data.unit?.toString() || ""}
                 onChange={(value) => handleChange("unit", value)}
             />
 
@@ -85,7 +88,7 @@ export default function ScoreSubmission3Row({ data, onChange }: ScoreSubmission3
                 label="이수자 수"
                 type="number"
                 placeholder="이수자 수"
-                value={data.totalStudents}
+                value={data.totalStudents || ""}
                 onChange={(value) => handleChange("totalStudents", value)}
             />
 
@@ -102,7 +105,7 @@ export default function ScoreSubmission3Row({ data, onChange }: ScoreSubmission3
                 value={data.achievement || ""}
                 onChange={(value: string) => handleChange("achievement", value)}
             />
-        </div>
+        </div >
     );
 }
 

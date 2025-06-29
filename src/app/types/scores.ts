@@ -13,30 +13,39 @@ export interface PdfSubmissionData {
 // 2. [3-1] 성적 테이블 제출용 타입 정의
 // ---------------------------------------------
 
+export type SubjectType = '일반선택' | '진로선택' | '체육/예술';
+
 // 개별 행(과목)에 대한 성적 데이터 구조
 export interface ScoreRowData {
-  subjectType: "일반선택" | "진로선택"; // 이수 구분
-  subject: string;         // 교과명 (예: 수학)
-  course: string;          // 과목명 (예: 수학 I)
-  rawScore: string;        // 원점수
-  average: string;         // 평균
-  unit: string;            // 단위 수
-  totalStudents: string;   // 이수자 수
+  studentId: string;      // 학생 ID
+  semester: string;       // 학기 (2-1, 2-2, 3-1, 3-2)
+  subjectType: SubjectType; // 과목 유형
+  subject: string;        // 교과
+  course: string;          // 과목명
+  unit: number;          // 단위수 (선택적)
+  rawScore?: number;         // 점수
+  averageSubject?: number;       // 과목별 평균
+  stdDev?: number;       // 과목별 표준편차
+  totalStudents?: string;   // 이수자 수
+  achievement: string;       // 성취도
+  achievementPercentage?: number; // 성취도별 분표 비율
   grade?: string;          // 등급 (선택)
-  achievement?: string;    // 성취도 (선택)
 }
 
 // ScoreRowData의 초기값
 export const defaultScoreRowData: ScoreRowData = {
-  subjectType: "일반선택",
-  subject: "",
-  course: "",
-  rawScore: "",
-  average: "",
-  unit: "",
-  totalStudents: "",
-  grade: "",
-  achievement: "",
+  studentId: "",      // 학생 ID
+  semester: "",       // 학기 (2-1, 2-2, 3-1, 3-2)
+  subjectType: "일반선택", // 과목 유형
+  subject: "",        // 교과
+  course: "",          // 과목명
+  unit: 0,          // 단위수 (선택적)
+  rawScore: 0,         // 점수
+  averageSubject: 0,       // 과목별 평균
+  totalStudents: "",   // 이수자 수
+  achievement: "",       // 성취도
+  achievementPercentage: 0, // 성취도별 분표 비율
+  grade: "",          // 등급 (선택)
 };
 
 // 전체 테이블 제출 데이터 구조
@@ -80,9 +89,8 @@ export const defaultMonthlyScore: MonthlyMockTestScore = {
 
 // 전체 모의고사 제출 데이터
 export interface MockTestSubmissionData {
-  studentName: string;
-  contact: string;
-  scores: Record<Month, MonthlyMockTestScore>; // 월별 모의고사 점수
+  studentId: string;
+  scores: Partial<Record<Month, MonthlyMockTestScore>>;
 }
 
 // ---------------------------------------------
@@ -94,3 +102,19 @@ export type ScoreSubmissionData =
   | { type: 'pdf'; data: PdfSubmissionData }
   | { type: 'mock'; data: MockTestSubmissionData }
   | { type: 'table'; data: TableSubmissionData };
+
+// 성적 제출 상태 (기존과 호환)
+export interface ScoreSubmissionStatus {
+  contact: string;
+  scoreSubmission_2: string;    // 2학년 성적 제출 상태
+  scoreSubmission_3: string;    // 3학년 성적 제출 상태
+  scoreSubmission_mockTest: string; // 모의고사 제출 상태
+}
+
+
+// 파싱된 성적 데이터 타입 정의
+export interface ParsedGradeData {
+  studentId: string;      // 학생 ID
+  grades: ScoreRowData[];    // 교과 성적
+  mockTests: MonthlyMockTestScore[]; // 모의고사 성적
+}

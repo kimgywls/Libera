@@ -1,5 +1,5 @@
 import ScoreSubmission2Modal from "./_modal/ScoreSubmission2Modal";
-import { useModal } from "../../hook/useModal";
+import { useModal } from "../../hooks/useModal";
 import { defaultStudent } from "@/app/types/students";
 
 export default function StudentsAddButton() {
