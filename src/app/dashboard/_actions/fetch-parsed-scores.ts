@@ -8,7 +8,7 @@ import {
 // 목데이터: 일반 성적 (ScoreRowData[])
 const mockScoreRows: ScoreRowData[] = [
     {
-        "studentId": "1",
+        studentId: "1",
         "semester": "1-1",
         "subjectType": "일반선택",
         "subject": "국어",
@@ -1926,6 +1926,7 @@ export const getStudentAllScores = async (studentId: string) => {
     }
 
     return {
+        studentId,
         scoreRows,
         mockTest,
     };

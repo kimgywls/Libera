@@ -1,3 +1,42 @@
+export const GRADE_HEADER_STRUCTURE: Record<string, string[]> = {
+    "1학년": ["1-1", "1-2"],
+    "2학년": ["2-1", "2-2"],
+    "3학년": ["3-1"],
+};
+
+// 학기 상수
+export const SEMESTER = {
+    FIRST_SEMESTER: '1-1',
+    SECOND_SEMESTER: '1-2',
+    THIRD_SEMESTER: '2-1',
+    FOURTH_SEMESTER: '2-2',
+    FIFTH_SEMESTER: '3-1',
+} as const;
+
+export type Semester = typeof SEMESTER[keyof typeof SEMESTER];
+
+// 과목 상수
+export const SUBJECTS = [
+    "국어",
+    "영어",
+    "수학",
+    "사회(한국사)",
+    "과학",
+    "국+영+사",
+    "수+영+과",
+    "수+과",
+    "국+수+영+사(한)",
+    "국+수+영+과",
+    "국+수+영+사(한)+과",
+    "전과목",
+] as const;
+
+export type Subject = (typeof SUBJECTS)[number];
+
+
+export const SUBJECT_TYPES = ["일반선택", "진로선택", "체육/예술"] as const;
+export type SubjectType = (typeof SUBJECT_TYPES)[number];
+
 // 성적 제출 상태 상수
 export const SUBMISSION_STATUS = {
     NOT_SUBMITTED: '미제출',

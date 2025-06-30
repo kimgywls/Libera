@@ -1,21 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
-import { getStudentAllScores } from "../_actions/fetch-parsed-grades";
-import { ScoreRowData, MockTestSubmissionData } from "../../types/scores";
-
-type StudentAllScores = {
-    scoreRows: ScoreRowData[];
-    mockTest: MockTestSubmissionData;
-};
+import { getStudentAllScores } from "../_actions/fetch-parsed-scores";
+import { StudentAllScores } from "../../types/scores";
 
 // 특정 학생의 성적 데이터를 관리하는 훅
 export function useStudentAllScores(studentId: string) {
-    const [studentGrades, setStudentGrades] = useState<StudentAllScores | null>(null);
+    const [studentAllScores, setStudentAllScores] = useState<StudentAllScores | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchStudentGrades = useCallback(async () => {
         if (!studentId) {
-            setStudentGrades(null);
+            setStudentAllScores(null);
             setLoading(false);
             return;
         }
@@ -24,7 +19,11 @@ export function useStudentAllScores(studentId: string) {
         setError(null);
         try {
             const data = await getStudentAllScores(studentId);
-            setStudentGrades(data);
+            setStudentAllScores({
+                studentId: data.studentId,
+                scores: data.scoreRows,
+                mockTests: [data.mockTest]
+            });
         } catch (err) {
             setError("학생 성적 데이터를 불러오는데 실패했습니다.");
             console.error("Failed to fetch student grades:", err);
@@ -38,7 +37,7 @@ export function useStudentAllScores(studentId: string) {
     }, [fetchStudentGrades]);
 
     return {
-        studentGrades,
+        studentAllScores,
         loading,
         error,
         reload: fetchStudentGrades,

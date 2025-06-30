@@ -13,8 +13,18 @@ import StudentNotFound from "./_components/StudentNotFound";
 export default function ScoresPage() {
     const params = useParams();
     const studentId = params.id as string;
-    const { students } = useFetchStudents();
-    const { studentGrades, loading: gradesLoading, error: gradesError } = useStudentAllScores(studentId);
+    const { students, loading: studentsLoading, error: studentsError } = useFetchStudents();
+    const { studentAllScores, loading: gradesLoading, error: gradesError } = useStudentAllScores(studentId);
+
+    // 학생 목록 로딩 중인 경우
+    if (studentsLoading) {
+        return <LoadingState />;
+    }
+
+    // 학생 목록 에러가 발생한 경우
+    if (studentsError) {
+        return <ErrorState message={studentsError} />;
+    }
 
     // 현재 학생 정보 찾기
     const currentStudent = students.find((student: Student) => student.id === studentId);
@@ -24,18 +34,18 @@ export default function ScoresPage() {
         return <StudentNotFound />;
     }
 
-    // 로딩 중인 경우
+    // 성적 데이터 로딩 중인 경우
     if (gradesLoading) {
         return <LoadingState />;
     }
 
-    // 에러가 발생한 경우
+    // 성적 데이터 에러가 발생한 경우
     if (gradesError) {
         return <ErrorState message={gradesError} />;
     }
 
     // 성적 데이터가 없는 경우
-    if (!studentGrades) {
+    if (!studentAllScores) {
         return (
             <NoGradesMessage
                 message={`${currentStudent.studentName} 학생의 성적 데이터가 없습니다.`}
@@ -44,5 +54,5 @@ export default function ScoresPage() {
     }
 
     // 성적 데이터가 있는 경우
-    return <StudentAllScoresDisplay studentAllScores={studentGrades} student={currentStudent} />;
+    return <StudentAllScoresDisplay studentAllScores={studentAllScores} student={currentStudent} />;
 } 

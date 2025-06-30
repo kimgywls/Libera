@@ -1,4 +1,4 @@
-import { Month } from "../constants"; // "March" | "June" | "September" | "November" 같은 문자열 enum
+import { Month, Semester, Subject } from "../constants"; // "March" | "June" | "September" | "November" 같은 문자열 enum
 
 // ---------------------------------------------
 //1. [2-2] PDF 파일 제출용 타입 정의
@@ -60,7 +60,7 @@ export interface TableSubmissionData {
 // ---------------------------------------------
 
 // 월별 모의고사 성적 구조 (3~6과목)
-export interface MonthlyMockTestScore {
+export interface MonthlyMockTestGrade {
   korean: string;             // 국어
   math: string;               // 수학
   english: string;            // 영어
@@ -74,7 +74,7 @@ export interface MonthlyMockTestScore {
 }
 
 // 초기값 정의
-export const defaultMonthlyScore: MonthlyMockTestScore = {
+export const defaultMonthlyScore: MonthlyMockTestGrade = {
   korean: '',
   math: '',
   english: '',
@@ -90,7 +90,7 @@ export const defaultMonthlyScore: MonthlyMockTestScore = {
 // 전체 모의고사 제출 데이터
 export interface MockTestSubmissionData {
   studentId: string;
-  scores: Partial<Record<Month, MonthlyMockTestScore>>;
+  scores: Partial<Record<Month, MonthlyMockTestGrade>>;
 }
 
 // ---------------------------------------------
@@ -113,8 +113,26 @@ export interface ScoreSubmissionStatus {
 
 
 // 파싱된 성적 데이터 타입 정의
-export interface StudentGradeData {
+export interface StudentAllScores {
   studentId: string;      // 학생 ID
-  grades: ScoreRowData[];    // 교과 성적
-  mockTests: MonthlyMockTestScore[]; // 모의고사 성적
+  scores: ScoreRowData[];    // 교과 성적
+  mockTests: MockTestSubmissionData[]; // 모의고사 성적
+}
+
+
+// 과목별 성적 타입
+export type SubjectScores = {
+  [subject in Subject]?: number; // 성적이 없는 과목도 있을 수 있으므로 optional
+};
+
+// 학기별 성적 타입
+export type SemesterScores = {
+  [semester in Semester]?: SubjectScores;
+};
+
+// 전체 성적 타입
+export interface TotalScores {
+  studentId: string;
+  bySemester: SemesterScores;
+  overallGrade: number; // 전학기 내신 성적
 }

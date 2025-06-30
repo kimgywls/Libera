@@ -1,10 +1,10 @@
 "use client";
 
-import { MonthlyMockTestScore } from "@/app/types/scores";
+import { MonthlyMockTestGrade } from "@/app/types/scores";
 
 interface MockTestTableProps {
     month: string;
-    testData?: MonthlyMockTestScore;
+    testData?: MonthlyMockTestGrade;
 }
 
 const monthKorMap: Record<string, string> = {

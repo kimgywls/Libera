@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SubmitModal from "@/app/components/modal/SubmitModal";
-import ScoreSubmission3 from "./content/ScoreSubmission3";
+import ScoreSubmission3 from "./_contents/ScoreSubmission3";
 import { Student } from "@/app/types/students";
 import { SCORE_SUBMISSION_TYPE, SUBMISSION_STATUS } from "@/app/constants";
 import { getModalConfig } from "../../_utils/submitModalConfig";

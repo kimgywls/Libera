@@ -1,6 +1,7 @@
 "use client";
 
-import { ScoreRowData, SubjectType } from "@/app/types/scores";
+import { ScoreRowData } from "@/app/types/scores";
+import { SubjectType } from "@/app/constants";
 import GradeRow from "./GradeRow";
 
 interface GradeTableProps {
@@ -9,6 +10,12 @@ interface GradeTableProps {
     grades: ScoreRowData[];
 }
 
+const headersMap: Record<SubjectType, string[]> = {
+    일반선택: ["교과", "과목", "과목명", "단위수", "원점수", "과목평균", "표준편차", "성취도", "수강자 수", "석차등수"],
+    진로선택: ["교과", "과목", "과목명", "단위수", "원점수", "과목평균", "성취도", "수강자 수", "성취도별 분포 비율"],
+    "체육/예술": ["교과", "과목", "단위수", "성취도"],
+};
+
 export default function GradeTable({
     semester,
     subjectType,
@@ -16,20 +23,12 @@ export default function GradeTable({
 }: GradeTableProps) {
     if (!grades) return null;
 
-    // ✅ 정확한 필터링: 학기 + 과목 유형
+    const headers = headersMap[subjectType as SubjectType];
+
+    // 정확한 필터링: 학기 + 과목 유형
     const filteredGrades = grades.filter(
         (g) => g.semester === semester && g.subjectType === subjectType
     );
-
-
-    let headers: string[] = [];
-    if (subjectType === "일반선택") {
-        headers = ["교과", "과목", "과목명", "단위수", "원점수", "과목평균", "표준편차", "성취도", "수강자 수", "석차등수"];
-    } else if (subjectType === "진로선택") {
-        headers = ["교과", "과목", "과목명", "단위수", "원점수", "과목평균", "성취도", "수강자 수", "성취도별 분포 비율"];
-    } else if (subjectType === "체육/예술") {
-        headers = ["교과", "과목", "단위수", "성취도"];
-    }
 
     return (
         <div className="rounded-lg p-4 bg-white shadow-sm border border-gray-200 mb-6">

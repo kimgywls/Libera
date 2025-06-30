@@ -14,9 +14,9 @@ export default function LoadingSpinner({
     className = ""
 }: LoadingSpinnerProps) {
     const sizeClasses = {
-        sm: "w-4 h-4",
-        md: "w-6 h-6",
-        lg: "w-8 h-8"
+        sm: "w-6 h-6",
+        md: "w-8 h-8",
+        lg: "w-12 h-12"
     };
 
     const colorClasses = {

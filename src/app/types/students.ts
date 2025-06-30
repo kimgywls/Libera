@@ -10,7 +10,6 @@ export interface Student {
   currentSchool: string;    // 현재 재학 중인 학교
   desiredSchool: string;    // 희망 진학 학교
   desiredMajor: string;     // 희망 전공 / 학과
-  overallGrade: number;       // 전체 내신 성적
   consultationDate: string;    // 상담 날짜
 }
 
@@ -40,6 +39,5 @@ export const defaultStudent: StudentInput = {
   currentSchool: "",     // 현재 학교
   desiredSchool: "",     // 희망 학교
   desiredMajor: "",      // 희망 학과
-  overallGrade: 0,         // 전체 내신 성적
   consultationDate: "",    // 상담 날짜
 };
