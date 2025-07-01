@@ -1,16 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
-import { getStudentAllScores } from "../_actions/fetch-parsed-scores";
-import { StudentAllScores } from "../../types/scores";
+import { getStudentCombinedScores } from "../_actions/fetch-parsed-scores";
+import { MonthlyMockTestGrade, MockTestSubmissionData, StudentCombinedScores } from "../../types/scores";
 
 // 특정 학생의 성적 데이터를 관리하는 훅
 export function useStudentAllScores(studentId: string) {
-    const [studentAllScores, setStudentAllScores] = useState<StudentAllScores | null>(null);
+    const [studentCombinedScores, setStudentCombinedScores] = useState<StudentCombinedScores | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchStudentGrades = useCallback(async () => {
         if (!studentId) {
-            setStudentAllScores(null);
+            setStudentCombinedScores(null);
             setLoading(false);
             return;
         }
@@ -18,11 +18,11 @@ export function useStudentAllScores(studentId: string) {
         setLoading(true);
         setError(null);
         try {
-            const data = await getStudentAllScores(studentId);
-            setStudentAllScores({
+            const data = await getStudentCombinedScores(studentId);
+            setStudentCombinedScores({
                 studentId: data.studentId,
-                scores: data.scoreRows,
-                mockTests: [data.mockTest]
+                subjectScores: data.subjectScores,
+                mockTestScores: convertMockTestScores(data.mockTestScores),
             });
         } catch (err) {
             setError("학생 성적 데이터를 불러오는데 실패했습니다.");
@@ -37,9 +37,18 @@ export function useStudentAllScores(studentId: string) {
     }, [fetchStudentGrades]);
 
     return {
-        studentAllScores,
+        studentCombinedScores,
         loading,
         error,
         reload: fetchStudentGrades,
+    };
+}
+
+function convertMockTestScores(submission: MockTestSubmissionData): Partial<Record<"march" | "june" | "september" | "november", MonthlyMockTestGrade>> {
+    return {
+        march: submission.scores?.march,
+        june: submission.scores?.june,
+        september: submission.scores?.september,
+        november: submission.scores?.november,
     };
 } 

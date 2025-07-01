@@ -3,7 +3,7 @@
 // ---------------------------------------------
 
 export interface Student {
-  id: string;              // 선택적 ID (백엔드에서 생성됨)
+  id: string;              // 백엔드에서 생성됨
   studentName: string;      // 학생 이름
   birthdate: string;        // 생년월일
   contact: string;          // 연락처 (주로 부모님)

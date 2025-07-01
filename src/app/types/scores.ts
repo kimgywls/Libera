@@ -1,79 +1,73 @@
-import { Month, Semester, Subject } from "../constants"; // "March" | "June" | "September" | "November" 같은 문자열 enum
+// ---------------------------------------------
+// ENUM 의존성 타입 임포트
+// ---------------------------------------------
+import { Month, Semester, Subject } from "../constants";
 
 // ---------------------------------------------
-//1. [2-2] PDF 파일 제출용 타입 정의
+// 1. PDF 파일 제출용 타입 정의 (2-2)
 // ---------------------------------------------
-
-// PDF 제출 데이터 구조: 단일 파일만 제출
 export interface PdfSubmissionData {
   file: File;
 }
 
 // ---------------------------------------------
-// 2. [3-1] 성적 테이블 제출용 타입 정의
+// 2. 성적 테이블 제출용 타입 정의 (3-1)
 // ---------------------------------------------
-
 export type SubjectType = '일반선택' | '진로선택' | '체육/예술';
 
-// 개별 행(과목)에 대한 성적 데이터 구조
 export interface ScoreRowData {
-  studentId: string;      // 학생 ID
-  semester: string;       // 학기 (2-1, 2-2, 3-1, 3-2)
-  subjectType: SubjectType; // 과목 유형
-  subject: string;        // 교과
-  course: string;          // 과목명
-  unit: number;          // 단위수 (선택적)
-  rawScore?: number;         // 점수
-  averageSubject?: number;       // 과목별 평균
-  stdDev?: number;       // 과목별 표준편차
-  totalStudents?: string;   // 이수자 수
-  achievement: string;       // 성취도
-  achievementPercentage?: number; // 성취도별 분표 비율
-  grade?: string;          // 등급 (선택)
+  studentId: string;
+  semester: string;
+  subjectType: SubjectType;
+  subject: string;
+  course: string;
+  unit: number;
+  rawScore?: number;
+  averageSubject?: number;
+  stdDev?: number;
+  totalStudents?: string;
+  achievement: string;
+  achievementPercentage?: number;
+  grade?: string;
 }
 
-// ScoreRowData의 초기값
 export const defaultScoreRowData: ScoreRowData = {
-  studentId: "",      // 학생 ID
-  semester: "",       // 학기 (2-1, 2-2, 3-1, 3-2)
-  subjectType: "일반선택", // 과목 유형
-  subject: "",        // 교과
-  course: "",          // 과목명
-  unit: 0,          // 단위수 (선택적)
-  rawScore: 0,         // 점수
-  averageSubject: 0,       // 과목별 평균
-  totalStudents: "",   // 이수자 수
-  achievement: "",       // 성취도
-  achievementPercentage: 0, // 성취도별 분표 비율
-  grade: "",          // 등급 (선택)
+  studentId: "",
+  semester: "",
+  subjectType: "일반선택",
+  subject: "",
+  course: "",
+  unit: 0,
+  rawScore: 0,
+  averageSubject: 0,
+  totalStudents: "",
+  achievement: "",
+  achievementPercentage: 0,
+  grade: "",
 };
 
-// 전체 테이블 제출 데이터 구조
 export interface TableSubmissionData {
   studentName: string;
   contact: string;
-  rows: ScoreRowData[]; // 여러 과목 입력
+  rows: ScoreRowData[];
 }
 
 // ---------------------------------------------
 // 3. 모의고사 제출용 타입 정의
 // ---------------------------------------------
-
-// 월별 모의고사 성적 구조 (3~6과목)
 export interface MonthlyMockTestGrade {
-  korean: string;             // 국어
-  math: string;               // 수학
-  english: string;            // 영어
-  inquiry1Type: string;       // 탐구1 영역 (사회/과학)
-  inquiry1Subject: string;    // 탐구1 과목
-  inquiry1Grade: string;      // 탐구1 등급
-  inquiry2Type: string;       // 탐구2 영역
-  inquiry2Subject: string;    // 탐구2 과목
-  inquiry2Grade: string;      // 탐구2 등급
-  koreanHistory: string;      // 한국사
+  korean: string;
+  math: string;
+  english: string;
+  inquiry1Type: string;
+  inquiry1Subject: string;
+  inquiry1Grade: string;
+  inquiry2Type: string;
+  inquiry2Subject: string;
+  inquiry2Grade: string;
+  koreanHistory: string;
 }
 
-// 초기값 정의
 export const defaultMonthlyScore: MonthlyMockTestGrade = {
   korean: '',
   math: '',
@@ -87,52 +81,75 @@ export const defaultMonthlyScore: MonthlyMockTestGrade = {
   koreanHistory: '',
 };
 
-// 전체 모의고사 제출 데이터
 export interface MockTestSubmissionData {
   studentId: string;
   scores: Partial<Record<Month, MonthlyMockTestGrade>>;
 }
 
 // ---------------------------------------------
-// 4. 모든 성적 제출 타입 통합 정의 (Union Type)
+// 4. 성적 통합 제출 타입 정의 (Union)
 // ---------------------------------------------
-
-// type은 'pdf', 'mock', 'table' 중 하나이며, 각각에 맞는 데이터 구조가 필요
 export type ScoreSubmissionData =
   | { type: 'pdf'; data: PdfSubmissionData }
   | { type: 'mock'; data: MockTestSubmissionData }
   | { type: 'table'; data: TableSubmissionData };
 
-// 성적 제출 상태 (기존과 호환)
+// ---------------------------------------------
+// 5. 성적 제출 상태
+// ---------------------------------------------
 export interface ScoreSubmissionStatus {
   contact: string;
-  scoreSubmission_2: string;    // 2학년 성적 제출 상태
-  scoreSubmission_3: string;    // 3학년 성적 제출 상태
-  scoreSubmission_mockTest: string; // 모의고사 제출 상태
+  scoreSubmission_2: string;
+  scoreSubmission_3: string;
+  scoreSubmission_mockTest: string;
 }
 
-
-// 파싱된 성적 데이터 타입 정의
-export interface StudentAllScores {
-  studentId: string;      // 학생 ID
-  scores: ScoreRowData[];    // 교과 성적
-  mockTests: MockTestSubmissionData[]; // 모의고사 성적
+// ---------------------------------------------
+// 6. 내신과 모의고사 성적 통합
+// ---------------------------------------------
+export interface StudentCombinedScores {
+  studentId: string;
+  subjectScores: ScoreRowData[]; // 교과 성적 (내신)
+  mockTestScores: Partial<Record<Month, MonthlyMockTestGrade>>; // 모의고사 성적
 }
 
-
-// 과목별 성적 타입
-export type SubjectScores = {
-  [subject in Subject]?: number; // 성적이 없는 과목도 있을 수 있으므로 optional
+// ---------------------------------------------
+// 7. 성적 분석용 구조
+// ---------------------------------------------
+export type SubjectGrade = {
+  [subject in Subject]?: number;
 };
 
-// 학기별 성적 타입
-export type SemesterScores = {
-  [semester in Semester]?: SubjectScores;
+export type SemesterGrade = {
+  [semester in Semester]?: SubjectGrade;
 };
 
-// 전체 성적 타입
 export interface TotalScores {
   studentId: string;
-  bySemester: SemesterScores;
-  overallGrade: number; // 전학기 내신 성적
+  bySemester: SemesterGrade;
+  overallGrade: number;
+}
+
+export interface OverallGradeForChart {
+  semester: string;
+  grade: number | null;
+  originalGrade: number | null;
+}
+
+// ---------------------------------------------
+// 8. 비교과(서술형) 평가 타입 정의
+// ---------------------------------------------
+export interface NonScoreRowData {
+  creativeActive: string;
+  detailedAndSpecial: string;
+  generalOpinion?: string;
+}
+
+export type SemesterNonScore = {
+  [semester in Semester]?: NonScoreRowData;
+};
+
+export interface NonScoreSummary {
+  studentId: string;
+  bySemester: SemesterNonScore;
 }

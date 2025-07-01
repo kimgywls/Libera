@@ -251,15 +251,13 @@ export const fetchTotalScores = async (studentId: string): Promise<TotalScores> 
     return totalScores;
 };
 
-export const getStudentTotalGrade = async (studentId: string) => {
+export const getStudentTotalGrade = async (studentId: string): Promise<{ totalScores: TotalScores }> => {
+    try {
+        const totalScores = await fetchTotalScores(studentId);
 
-    const totalScores = mockTotalScoresList.find((total) => total.studentId === studentId);
-
-    if (!totalScores) {
-        throw new Error("해당 학생의 모의고사 데이터를 찾을 수 없습니다.");
+        return { totalScores };
+    } catch (error) {
+        console.error("📛 성적 데이터를 가져오는 중 오류:", error);
+        throw error;
     }
-
-    return {
-        totalScores,
-    };
 };

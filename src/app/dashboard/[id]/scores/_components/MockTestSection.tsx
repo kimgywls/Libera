@@ -1,13 +1,13 @@
 "use client";
 
-import { MockTestSubmissionData } from "@/app/types/scores";
+import { MonthlyMockTestGrade } from "@/app/types/scores";
 import { Month, MOCK_TEST_MONTHS } from "@/app/constants";
 import { Student } from "@/app/types/students";
 import MockTestTable from "./MockTestTable";
 import ScoreSubmissionMockTestModal from "@/app/main/_components/_modal/ScoreSubmissionMockTestModal";
 
 interface MockTestSectionProps {
-    mockTests: MockTestSubmissionData[];
+    mockTestScores: Partial<Record<"march" | "june" | "september" | "november", MonthlyMockTestGrade>>;
     student: Student;
     modalState: {
         isModalOpen: (key: string) => boolean;
@@ -17,7 +17,7 @@ interface MockTestSectionProps {
 }
 
 export default function MockTestSection({
-    mockTests,
+    mockTestScores,
     student,
     modalState,
 }: MockTestSectionProps) {
@@ -47,7 +47,7 @@ export default function MockTestSection({
                             <MockTestTable
                                 key={month}
                                 month={month}
-                                testData={mockTests.find(test => test.scores[month as Month])?.scores[month as Month]}
+                                testData={mockTestScores[month as Month]!}
                             />
                         ))}
                     </div>
@@ -59,7 +59,7 @@ export default function MockTestSection({
                 isOpen={modalState.isModalOpen('mockTest')}
                 onClose={handleMockTestModalClose}
                 student={student}
-                initialScores={mockTests.reduce((acc, test) => ({ ...acc, ...test.scores }), {})}
+                initialScores={mockTestScores}
                 onSubmit={(status) => {
                     console.log("모의고사 성적 제출 완료:", status);
                     handleMockTestModalClose();

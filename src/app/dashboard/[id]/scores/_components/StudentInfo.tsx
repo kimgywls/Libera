@@ -14,10 +14,10 @@ import {
 
 interface StudentInfoProps {
     student: Student;
-    grade: number | null;
+    overallGrade: number;
 }
 
-export default function StudentInfo({ student, grade }: StudentInfoProps) {
+export default function StudentInfo({ student, overallGrade }: StudentInfoProps) {
     const [consultationDate, setConsultationDate] = useState(student.consultationDate || "");
 
     const handleConsultationDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +126,7 @@ export default function StudentInfo({ student, grade }: StudentInfoProps) {
                                 <div>
                                     <p className="text-sm font-medium text-gray-700">전체 내신 성적</p>
                                     <p className="text-lg font-semibold text-gray-900 mt-1">
-                                        {grade || "미입력"}
+                                        {overallGrade}
                                     </p>
                                 </div>
                             </div>

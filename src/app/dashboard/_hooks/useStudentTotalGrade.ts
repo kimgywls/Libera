@@ -1,19 +1,17 @@
-import { useEffect, useState, useCallback } from "react";
+import { TotalScores } from "@/app/types/scores";
+import { useEffect, useState } from "react";
 import { getStudentTotalGrade } from "../_actions/fetch-total-grade";
-import { TotalScores } from "../../types/scores";
 
 export function useStudentTotalGrade(studentId: string) {
-    const [studentTotalGrade, setStudentTotalGrade] = useState<TotalScores | null>(null);
+    const [studentTotalGrade, setStudentTotalGrade] = useState<TotalScores>({
+        studentId,
+        bySemester: {},
+        overallGrade: 0,
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchStudentTotalScores = useCallback(async () => {
-        if (!studentId) {
-            setStudentTotalGrade(null);
-            setLoading(false);
-            return;
-        }
-
+    const fetchStudentTotalScores = async () => {
         setLoading(true);
         setError(null);
         try {
@@ -21,19 +19,19 @@ export function useStudentTotalGrade(studentId: string) {
             setStudentTotalGrade({
                 studentId: data.totalScores.studentId,
                 bySemester: data.totalScores.bySemester,
-                overallGrade: data.totalScores.overallGrade
+                overallGrade: data.totalScores.overallGrade,
             });
         } catch (err) {
+            console.error("학생 성적 데이터를 불러오는데 실패했습니다:", err);
             setError("학생 성적 데이터를 불러오는데 실패했습니다.");
-            console.error("Failed to fetch student grades:", err);
         } finally {
             setLoading(false);
         }
-    }, [studentId]);
+    };
 
     useEffect(() => {
         fetchStudentTotalScores();
-    }, [fetchStudentTotalScores]);
+    }, [studentId]);
 
     return {
         studentTotalGrade,

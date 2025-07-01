@@ -1907,7 +1907,7 @@ export const fetchMockTestResults = async (
 };
 
 // 성적 + 모의고사 통합 결과 반환
-export const getStudentAllScores = async (studentId: string) => {
+export const getStudentCombinedScores = async (studentId: string) => {
     /*
     const [scoreRows, mockTest] = await Promise.all([
         fetchParsedScoreRows(studentId),
@@ -1927,7 +1927,7 @@ export const getStudentAllScores = async (studentId: string) => {
 
     return {
         studentId,
-        scoreRows,
-        mockTest,
+        subjectScores: scoreRows,
+        mockTestScores: mockTest,
     };
 };
