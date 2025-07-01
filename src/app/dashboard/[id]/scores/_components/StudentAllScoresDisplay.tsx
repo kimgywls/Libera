@@ -1,6 +1,6 @@
 "use client";
 
-import { ScoreRowData, StudentAllScores } from "@/app/types/scores";
+import { ScoreRowData, StudentCombinedScores } from "@/app/types/scores";
 import { Student } from "@/app/types/students";
 import { useStudentTotalGrade } from "@/app/dashboard/_hooks/useStudentTotalGrade";
 import { useModalState } from "@/app/hooks/useModalState";
@@ -8,21 +8,22 @@ import StudentInfo from "./StudentInfo";
 import StudentGradeSection from "./StudentGradeSection";
 import MockTestSection from "./MockTestSection";
 import SemesterRankGradeSection from "./SemesterRankGradeSection";
+import SemesterGradeChartSection from "./SemesterGradeChartSection";
 
 interface StudentAllScoresDisplayProps {
-    studentAllScores: StudentAllScores;
+    studentCombinedScores: StudentCombinedScores;
     student: Student;
 }
 
 export default function StudentAllScoresDisplay({
-    studentAllScores,
+    studentCombinedScores,
     student,
 }: StudentAllScoresDisplayProps) {
-    const { scores, mockTests } = studentAllScores;
+    const { subjectScores, mockTestScores } = studentCombinedScores;
     const { studentTotalGrade } = useStudentTotalGrade(student.id);
     const modalState = useModalState();
 
-    const gradesBySemester = scores.reduce((acc, score) => {
+    const gradesBySemester = subjectScores.reduce((acc, score) => {
         if (!acc[score.semester]) {
             acc[score.semester] = [];
         }
@@ -32,7 +33,7 @@ export default function StudentAllScoresDisplay({
 
     return (
         <div className="space-y-6">
-            <StudentInfo student={student} grade={studentTotalGrade?.overallGrade || null} />
+            <StudentInfo student={student} overallGrade={studentTotalGrade!.overallGrade} />
 
             <StudentGradeSection
                 gradesBySemester={gradesBySemester}
@@ -41,15 +42,19 @@ export default function StudentAllScoresDisplay({
             />
 
             <MockTestSection
-                mockTests={mockTests}
+                mockTestScores={mockTestScores}
                 student={student}
                 modalState={modalState}
             />
 
             <SemesterRankGradeSection
-                totalGrade={studentTotalGrade}
+                totalGrade={studentTotalGrade!}
                 student={student}
                 modalState={modalState}
+            />
+
+            <SemesterGradeChartSection
+                totalGrade={studentTotalGrade!}
             />
         </div>
     );

@@ -1,10 +1,10 @@
 "use client";
 
-import { SemesterScores } from "@/app/types/scores";
+import { SemesterGrade } from "@/app/types/scores";
 import { GRADE_HEADER_STRUCTURE, Semester, SUBJECTS } from "@/app/constants";
 
 interface SemesterGradeTableProps {
-    grade: SemesterScores;
+    grade: SemesterGrade;
     isEditable?: boolean;
     onChange?: (semester: string, subject: string, value: number | undefined) => void;
 }

@@ -6,7 +6,7 @@ import SemesterGradeTable from "./SemesterGradeTable";
 import EditSemesterGradeModal from "./_modals/EditSemesterGradeModal";
 
 interface SemesterRankGradeSectionProps {
-    totalGrade: TotalScores | null;
+    totalGrade: TotalScores;
     student: Student;
     modalState: {
         isModalOpen: (key: string) => boolean;
@@ -58,7 +58,7 @@ export default function SemesterRankGradeSection({
             <EditSemesterGradeModal
                 isOpen={modalState.isModalOpen('semesterGrade')}
                 onClose={handleSemesterGradeModalClose}
-                initialGrade={totalGrade || {
+                initialGrade={totalGrade! || {
                     studentId: student.id,
                     bySemester: {},
                     overallGrade: 0,
