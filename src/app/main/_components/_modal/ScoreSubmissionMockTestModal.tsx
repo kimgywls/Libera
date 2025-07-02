@@ -4,7 +4,7 @@ import ScoreSubmissionMockTest from "./_contents/ScoreSubmissionMockTest";
 import { Student } from "@/app/types/students";
 import { SCORE_SUBMISSION_TYPE, SUBMISSION_STATUS } from "@/app/constants";
 import { getModalConfig } from "../../_utils/submitModalConfig";
-import { MonthlyMockTestScore } from "@/app/types/scores";
+import { MonthlyMockTestGrade } from "@/app/types/scores";
 import { Month } from "@/app/constants";
 
 interface ScoreSubmissionMockTestModalProps {
@@ -13,7 +13,7 @@ interface ScoreSubmissionMockTestModalProps {
     student: Student;
     onSubmit?: (status: typeof SUBMISSION_STATUS.DONE) => void;
     onSave?: (status: typeof SUBMISSION_STATUS.IN_PROGRESS) => void;
-    initialScores?: Partial<Record<Month, MonthlyMockTestScore>>; // 초기 모의고사 데이터
+    initialScores?: Partial<Record<Month, MonthlyMockTestGrade>>; // 초기 모의고사 데이터
 }
 
 export default function ScoreSubmissionMockTestModal({

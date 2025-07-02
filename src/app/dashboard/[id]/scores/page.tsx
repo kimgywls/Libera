@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useFetchStudents } from "../../../main/_hooks/useFetchStudents";
 import { useStudentAllScores } from "../../_hooks/useStudentAllScores";
-import { Student } from "../../../types/students";
+import { Student } from "@/app/types/students";
 import StudentAllScoresDisplay from "./_components/StudentAllScoresDisplay";
 import NoGradesMessage from "./_components/NoGradesMessage";
 import LoadingState from "./_components/LoadingState";
@@ -14,7 +14,7 @@ export default function ScoresPage() {
     const params = useParams();
     const studentId = params.id as string;
     const { students, loading: studentsLoading, error: studentsError } = useFetchStudents();
-    const { studentAllScores, loading: gradesLoading, error: gradesError } = useStudentAllScores(studentId);
+    const { studentCombinedScores, loading: gradesLoading, error: gradesError } = useStudentAllScores(studentId);
 
     // 학생 목록 로딩 중인 경우
     if (studentsLoading) {
@@ -45,7 +45,7 @@ export default function ScoresPage() {
     }
 
     // 성적 데이터가 없는 경우
-    if (!studentAllScores) {
+    if (!studentCombinedScores) {
         return (
             <NoGradesMessage
                 message={`${currentStudent.studentName} 학생의 성적 데이터가 없습니다.`}
@@ -54,5 +54,5 @@ export default function ScoresPage() {
     }
 
     // 성적 데이터가 있는 경우
-    return <StudentAllScoresDisplay studentAllScores={studentAllScores} student={currentStudent} />;
+    return <StudentAllScoresDisplay studentCombinedScores={studentCombinedScores} student={currentStudent} />;
 } 

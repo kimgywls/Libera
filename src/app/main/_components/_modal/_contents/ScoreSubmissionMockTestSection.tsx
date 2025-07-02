@@ -2,12 +2,12 @@ import React from "react";
 import GradeSelect from "../../form/GradeSelect";
 import InquiryBlock from "../../form/InquiryBlock";
 import { Month, monthLabelMap } from "@/app/constants";
-import { MonthlyMockTestScore } from "@/app/types/scores";
+import { MonthlyMockTestGrade } from "@/app/types/scores";
 
 // 각 월별 섹션 Props 정의
 interface SectionProps {
     month: Month; // 예: 'march', 'june' 등
-    data: MonthlyMockTestScore; // 해당 월의 성적 데이터
+    data: MonthlyMockTestGrade; // 해당 월의 성적 데이터
     update: (field: string, value: string) => void; // 일반 필드 변경 핸들러
     handleInquiryTypeChange: (inquiryNumber: '1' | '2', type: string) => void; // 탐구 유형 변경 핸들러
 }

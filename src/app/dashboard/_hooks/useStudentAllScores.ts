@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { getStudentCombinedScores } from "../_actions/fetch-parsed-scores";
-import { MonthlyMockTestGrade, MockTestSubmissionData, StudentCombinedScores } from "../../types/scores";
+import { MonthlyMockTestGrade, MockTestSubmissionData, StudentCombinedScores } from "@/app/types/scores";
 
 // 특정 학생의 성적 데이터를 관리하는 훅
 export function useStudentAllScores(studentId: string) {

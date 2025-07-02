@@ -3,7 +3,7 @@
 import { useState } from "react";
 import {
     MockTestSubmissionData,
-    MonthlyMockTestScore,
+    MonthlyMockTestGrade,
     defaultMonthlyScore
 } from "@/app/types/scores";
 import StudentInfoForm from "../../form/StudentInfoForm";
@@ -15,7 +15,7 @@ interface ScoreSubmissionMockTestProps {
     contact: string;             // 학생 연락처 (기본값)
     studentName: string;         // 학생 이름 (기본값)
     onDataChange?: (data: MockTestSubmissionData) => void; // 상위로 제출 데이터 전달 콜백
-    initialScores?: Partial<Record<Month, MonthlyMockTestScore>>; // 초기 모의고사 데이터 (수정 시 사용)
+    initialScores?: Partial<Record<Month, MonthlyMockTestGrade>>; // 초기 모의고사 데이터 (수정 시 사용)
 }
 
 // 모의고사 성적 입력 컴포넌트
@@ -32,7 +32,7 @@ export default function ScoreSubmissionMockTest({
     });
 
     // 월별 모의고사 성적 상태 초기화
-    const [mockTestData, setMockTestData] = useState<Record<Month, MonthlyMockTestScore>>(
+    const [mockTestData, setMockTestData] = useState<Record<Month, MonthlyMockTestGrade>>(
         () => {
             if (initialScores) {
                 // 초기 데이터가 있으면 사용, 없으면 기본값
@@ -41,13 +41,13 @@ export default function ScoreSubmissionMockTest({
                         month,
                         initialScores[month] || { ...defaultMonthlyScore }
                     ])
-                ) as Record<Month, MonthlyMockTestScore>;
+                ) as Record<Month, MonthlyMockTestGrade>;
                 return result;
             }
             // 초기 데이터가 없으면 기본값으로 초기화
             return Object.fromEntries(
                 MOCK_TEST_MONTHS.map((month) => [month, { ...defaultMonthlyScore }])
-            ) as Record<Month, MonthlyMockTestScore>;
+            ) as Record<Month, MonthlyMockTestGrade>;
         }
     );
 
@@ -68,7 +68,7 @@ export default function ScoreSubmissionMockTest({
     };
 
     // 과목 등급 등 일반 필드 업데이트 처리
-    const updateData = (month: Month, field: keyof MonthlyMockTestScore, value: string) => {
+    const updateData = (month: Month, field: keyof MonthlyMockTestGrade, value: string) => {
         const newScores = {
             ...mockTestData,
             [month]: {
@@ -82,9 +82,9 @@ export default function ScoreSubmissionMockTest({
 
     // 탐구 영역이 바뀌면 과목/등급 초기화
     const handleInquiryTypeChange = (month: Month, inquiryNumber: '1' | '2', type: string) => {
-        const typeField = `inquiry${inquiryNumber}Type` as keyof MonthlyMockTestScore;
-        const subjectField = `inquiry${inquiryNumber}Subject` as keyof MonthlyMockTestScore;
-        const gradeField = `inquiry${inquiryNumber}Grade` as keyof MonthlyMockTestScore;
+        const typeField = `inquiry${inquiryNumber}Type` as keyof MonthlyMockTestGrade;
+        const subjectField = `inquiry${inquiryNumber}Subject` as keyof MonthlyMockTestGrade;
+        const gradeField = `inquiry${inquiryNumber}Grade` as keyof MonthlyMockTestGrade;
 
         const newScores = {
             ...mockTestData,
@@ -118,7 +118,7 @@ export default function ScoreSubmissionMockTest({
                             month={month}
                             data={mockTestData[month]} // 해당 월 데이터 전달
                             update={(field, value) =>
-                                updateData(month, field as keyof MonthlyMockTestScore, value)
+                                updateData(month, field as keyof MonthlyMockTestGrade, value)
                             }
                             handleInquiryTypeChange={(inquiryNum, type) =>
                                 handleInquiryTypeChange(month, inquiryNum, type)

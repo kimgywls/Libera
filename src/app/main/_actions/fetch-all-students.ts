@@ -12,7 +12,6 @@ const mockStudents: Student[] = [
     currentSchool: "서울고등학교",
     desiredSchool: "서울대학교",
     desiredMajor: "컴퓨터공학과",
-    overallGrade: 1.2,
     consultationDate: "",
   },
   {
@@ -23,7 +22,6 @@ const mockStudents: Student[] = [
     currentSchool: "해솔고등학교",
     desiredSchool: "연세대학교",
     desiredMajor: "경영학과",
-    overallGrade: 2.0,
     consultationDate: "2025-07-09",
   },
   {
@@ -34,7 +32,6 @@ const mockStudents: Student[] = [
     currentSchool: "한빛고등학교",
     desiredSchool: "고려대학교",
     desiredMajor: "체육학과",
-    overallGrade: 3.4,
     consultationDate: "2025-07-12",
   },
 ];
