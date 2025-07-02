@@ -21,7 +21,7 @@ export function useStudentAllNonScore(studentId: string) {
             const data = await getStudentNonScores(studentId);
             setStudentNonScores({
                 studentId: data.nonScoreRows.studentId,
-                bySemester: data.nonScoreRows.bySemester,
+                bySchoolYear: data.nonScoreRows.bySchoolYear,
             });
         } catch (err) {
             setError("학생 성적 데이터를 불러오는데 실패했습니다.");

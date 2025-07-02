@@ -140,16 +140,22 @@ export interface OverallGradeForChart {
 // 8. 비교과(서술형) 평가 타입 정의
 // ---------------------------------------------
 export interface NonScoreRowData {
-  creativeActive: string;
-  detailedAndSpecial: string;
+  creativeActivity: {
+    freeActivity: string;
+    clubActivity: string;
+    careerActivity: string;
+  };
+  detailedAndSpecial: Record<string, string>;
   generalOpinion?: string;
 }
 
-export type SemesterNonScore = {
-  [semester in Semester]?: NonScoreRowData;
+export type SchoolYearNonScore = {
+  1: NonScoreRowData;
+  2: NonScoreRowData;
+  3: NonScoreRowData;
 };
 
 export interface NonScoreSummary {
   studentId: string;
-  bySemester: SemesterNonScore;
+  bySchoolYear: SchoolYearNonScore;
 }

@@ -4,11 +4,11 @@ import { useParams } from 'next/navigation';
 import { useFetchStudents } from '@/app/main/_hooks/useFetchStudents';
 import { Student } from '@/app/types/students';
 import { useStudentAllNonScore } from '../../_hooks/useStudentNonScore';
-import NoGradesMessage from '../scores/_components/NoGradesMessage';
-import LoadingState from '../scores/_components/LoadingState';
-import ErrorState from '../scores/_components/ErrorState';
-import StudentNotFound from '../scores/_components/StudentNotFound';
-import StudentNonScoreSummaryDisplay from './StudentNonScoreSummaryDisplay';
+import NoDataMessage from '../../_components/NoDataMessage';
+import LoadingState from '../../_components/LoadingState';
+import ErrorState from '../../_components/ErrorState';
+import StudentNotFound from '../../_components/StudentNotFound';
+import StudentNonScoreSummaryDisplay from './_components/StudentNonScoreSummaryDisplay';
 
 export default function NonScoresPage() {
     const params = useParams();
@@ -17,8 +17,8 @@ export default function NonScoresPage() {
     const { studentNonScores, loading: nonScoresLoading, error: nonScoresError } = useStudentAllNonScore(studentId);
 
     // 학생 목록 로딩 중인 경우
-    if (studentsLoading) {
-        return <LoadingState />;
+    if (studentsLoading || nonScoresLoading) {
+        return <LoadingState data="학생과 비교과 성적" />;
     }
 
     // 학생 목록 에러가 발생한 경우
@@ -34,11 +34,6 @@ export default function NonScoresPage() {
         return <StudentNotFound />;
     }
 
-    // 성적 데이터 로딩 중인 경우
-    if (nonScoresLoading) {
-        return <LoadingState />;
-    }
-
     // 성적 데이터 에러가 발생한 경우
     if (nonScoresError) {
         return <ErrorState message={nonScoresError} />;
@@ -47,7 +42,8 @@ export default function NonScoresPage() {
     // 성적 데이터가 없는 경우
     if (!studentNonScores) {
         return (
-            <NoGradesMessage
+            <NoDataMessage
+                title={`${currentStudent.studentName} 학생의 비교과 성적 없음`}
                 message={`${currentStudent.studentName} 학생의 성적 데이터가 없습니다.`}
             />
         );

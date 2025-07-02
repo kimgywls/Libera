@@ -1,4 +1,4 @@
-import { ResponsiveContainer, ComposedChart, XAxis, YAxis, Bar, Tooltip } from "recharts";
+import { ResponsiveContainer, ComposedChart, XAxis, YAxis, Bar, Tooltip, LabelList, LabelProps } from "recharts";
 import { Play } from "lucide-react";
 import { Subject } from "@/app/constants";
 import { OverallGradeForChart } from "@/app/types/scores";
@@ -20,6 +20,21 @@ const SUBJECT_COLORS = {
 
 export default function SemesterSubjectChart({ subject, chartData }: { subject: Subject; chartData: OverallGradeForChart[] }) {
 
+    // chartData가 비어있거나 undefined인 경우 처리
+    if (!chartData || chartData.length === 0) {
+        return (
+            <div className="flex flex-col gap-2 border border-gray-300 rounded-lg p-4">
+                <h4 className="flex items-center font-semibold text-lg gap-2">
+                    <Play className="w-5 h-5 text-violet-500 mr-2" />
+                    {subject} 석차 등급 추이
+                </h4>
+                <div className="flex items-center justify-center h-[300px] text-gray-500">
+                    데이터가 없습니다.
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col gap-2 border border-gray-300 rounded-lg p-4">
             <h4 className="flex items-center font-semibold text-lg gap-2">
@@ -36,11 +51,11 @@ export default function SemesterSubjectChart({ subject, chartData }: { subject: 
                         tickFormatter={(v) => v.split("학기")[0]}
                     />
                     <YAxis
-                        domain={[0, 9]}
-                        tickCount={10}
+                        domain={[5, 6.5]}
                         ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-                        tickFormatter={(v) => `${10 - parseInt(v, 10)}등급`}
+                        tickFormatter={(v) => (v <= 5 ? "" : `${10 - v}등급`)}
                     />
+
                     <Tooltip
                         content={({ payload, label }) => {
                             if (!payload || payload.length === 0) return null;
@@ -57,13 +72,31 @@ export default function SemesterSubjectChart({ subject, chartData }: { subject: 
                         }}
                     />
 
-
                     <Bar
                         dataKey="grade"
                         barSize={40}
                         fill={SUBJECT_COLORS[subject]}
                         isAnimationActive={false}
-                    />
+                    >
+                        <LabelList
+                            dataKey="originalGrade"
+                            content={({ x, y, width, value }) => {
+                                if (typeof x !== 'number' || typeof y !== 'number' || typeof width !== 'number') return null;
+                                return (
+                                    <text
+                                        x={x + width / 2}
+                                        y={y - 6}
+                                        textAnchor="middle"
+                                        fill="#444"
+                                        fontSize={14}
+                                        fontWeight="bold"
+                                    >
+                                        {value ?? "N/A"}
+                                    </text>
+                                );
+                            }}
+                        />
+                    </Bar>
 
                 </ComposedChart>
             </ResponsiveContainer>
