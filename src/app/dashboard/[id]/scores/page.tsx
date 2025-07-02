@@ -5,10 +5,10 @@ import { useFetchStudents } from "../../../main/_hooks/useFetchStudents";
 import { useStudentAllScores } from "../../_hooks/useStudentAllScores";
 import { Student } from "@/app/types/students";
 import StudentAllScoresDisplay from "./_components/StudentAllScoresDisplay";
-import NoGradesMessage from "./_components/NoGradesMessage";
-import LoadingState from "./_components/LoadingState";
-import ErrorState from "./_components/ErrorState";
-import StudentNotFound from "./_components/StudentNotFound";
+import NoGradesMessage from "../../_components/NoDataMessage";
+import LoadingState from "../../_components/LoadingState";
+import ErrorState from "../../_components/ErrorState";
+import StudentNotFound from "../../_components/StudentNotFound";
 
 export default function ScoresPage() {
     const params = useParams();
@@ -17,8 +17,8 @@ export default function ScoresPage() {
     const { studentCombinedScores, loading: gradesLoading, error: gradesError } = useStudentAllScores(studentId);
 
     // 학생 목록 로딩 중인 경우
-    if (studentsLoading) {
-        return <LoadingState />;
+    if (studentsLoading || gradesLoading) {
+        return <LoadingState data="학생과 성적 데이터" />;
     }
 
     // 학생 목록 에러가 발생한 경우
@@ -32,11 +32,6 @@ export default function ScoresPage() {
     // 학생을 찾을 수 없는 경우
     if (!currentStudent) {
         return <StudentNotFound />;
-    }
-
-    // 성적 데이터 로딩 중인 경우
-    if (gradesLoading) {
-        return <LoadingState />;
     }
 
     // 성적 데이터 에러가 발생한 경우

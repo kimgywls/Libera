@@ -4,7 +4,7 @@ import { ScoreRowData, StudentCombinedScores } from "@/app/types/scores";
 import { Student } from "@/app/types/students";
 import { useStudentTotalGrade } from "@/app/dashboard/_hooks/useStudentTotalGrade";
 import { useModalState } from "@/app/hooks/useModalState";
-import StudentInfo from "./StudentInfo";
+import StudentInfo from "../../../_components/StudentInfo";
 import StudentGradeSection from "./StudentGradeSection";
 import MockTestSection from "./MockTestSection";
 import SemesterRankGradeSection from "./SemesterRankGradeSection";

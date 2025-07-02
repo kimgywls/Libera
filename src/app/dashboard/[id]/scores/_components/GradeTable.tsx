@@ -39,7 +39,7 @@ export default function GradeTable({
             </div>
 
             <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
+                <table className="w-full border-collapse ">
                     <thead>
                         <tr className="bg-gray-50">
                             {headers.map((header) => (
