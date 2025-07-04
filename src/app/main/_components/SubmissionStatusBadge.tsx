@@ -29,6 +29,7 @@ export default function SubmissionStatusBadge({ label, status, type, student, on
         <div className="flex items-center justify-center mb-1 last:mb-0 w-full gap-2">
             <span className="text-sm text-gray-600 mr-4">{label}</span>
             <span className={`px-2 py-1 rounded text-sm font-medium ${getColor(status)}`}>{status}</span>
+            {/*
             {status === SUBMISSION_STATUS.NOT_SUBMITTED && (
                 <button
                     onClick={() => onOpenModal(student, type)}
@@ -37,6 +38,7 @@ export default function SubmissionStatusBadge({ label, status, type, student, on
                     제출하기
                 </button>
             )}
+            */}
         </div>
     );
 }
