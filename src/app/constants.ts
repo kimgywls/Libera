@@ -1,3 +1,5 @@
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export const GRADE_HEADER_STRUCTURE: Record<string, string[]> = {
     "1학년": ["1-1", "1-2"],
     "2학년": ["2-1", "2-2"],
