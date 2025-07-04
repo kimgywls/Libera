@@ -135,12 +135,13 @@ export default function StudentsRow({
                 </div>
             </td>
 
-            {/* 내보내기 버튼 */}
+            {/* 내보내기 버튼 
             <td className="px-4 py-3">
                 <button className="px-3 py-1.5 bg-gray-600 text-white rounded hover:bg-black transition-colors">
                     내보내기
                 </button>
             </td>
+            */}
         </tr>
     );
 }
