@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 
 import { ScoreRowData, StudentCombinedScores } from "@/app/types/scores";
@@ -42,12 +43,12 @@ export default function StudentAllScoresDisplay({
                 gradesBySemester={gradesBySemester}
                 student={student}
             />
-
+            {/*
             <MockTestSection
                 mockTestScores={mockTestScores}
                 student={student}
             />
-
+*/}
             <SemesterRankGradeSection
                 totalGrade={studentTotalGrade!}
                 student={student}

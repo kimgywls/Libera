@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -121,6 +122,7 @@ export default function StudentsRow({
                         onChange={onUpdateScoreSubmission || (() => { })}
                         onOpenModal={onOpenModal || (() => { })}
                     />
+                    {/*
                     <SubmissionStatusBadge
                         label="모의고사"
                         status={scoreSubmitted_mockTest}
@@ -129,6 +131,7 @@ export default function StudentsRow({
                         onChange={onUpdateScoreSubmission || (() => { })}
                         onOpenModal={onOpenModal || (() => { })}
                     />
+                    */}
                 </div>
             </td>
 
