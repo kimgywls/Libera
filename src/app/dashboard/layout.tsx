@@ -48,7 +48,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         },
         {
             name: "학교 리스트",
-            href: selectedStudent ? `/dashboard/${selectedStudent.id}/school-list` : "/main",
+            href: selectedStudent ? `/dashboard/${selectedStudent.id}/university-list` : "/main",
             icon: School,
             description: "대학 진학 추천"
         },
@@ -77,7 +77,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return (
         <div className="min-h-screen bg-violet-50 flex">
             {/* 사이드바 */}
-            <div className="w-64 bg-white shadow-lg flex flex-col">
+            <div className="w-60 bg-white shadow-lg flex flex-col">
                 {/* 사이드바 헤더 */}
                 <div className="flex items-center h-16 px-6 border-b border-gray-200">
                     <div className="flex items-center ">
