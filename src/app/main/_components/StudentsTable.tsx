@@ -5,7 +5,7 @@ import { Student } from "@/app/types/students";
 import { SUBMISSION_STATUS, SubmissionStatus, ScoreSubmissionType, SCORE_SUBMISSION_TYPE } from "@/app/constants";
 import { getModalConfig } from "../_utils/submitModalConfig";
 import ScoreSubmissionModals from "./_modal/ScoreSubmissionModals";
-import { useModal } from "../../hooks/useModal";
+import { useModalState } from "../../hooks/useModalState";
 import { useStudentSelection } from "../_hooks/useStudentSelection";
 import { useStudentsWithStatus } from "../_hooks/useStudentsWithStatus";
 import { useState } from "react";
@@ -43,19 +43,19 @@ export default function StudentsTable({ students }: StudentsTableProps) {
   const [currentType, setCurrentType] = useState<ScoreSubmissionType>(SCORE_SUBMISSION_TYPE.SCORE_SUBMISSION_2);
 
   // 모달 상태만 훅에서 관리
-  const modal = useModal();
+  const modal = useModalState();
 
   // 모달 열기
   const handleOpenModal = (student: Student, type: ScoreSubmissionType) => {
     setCurrentStudent(student);
     setCurrentType(type);
-    modal.open();
+    modal.openModal(type);
   };
 
   // 모달 닫기
   const handleCloseModal = () => {
     setCurrentStudent(null);
-    modal.close();
+    modal.closeModal(currentType);
   };
 
   // 모달 설정
@@ -126,7 +126,7 @@ export default function StudentsTable({ students }: StudentsTableProps) {
       {/* 모달 */}
       {modalConfig && currentStudent && (
         <ScoreSubmissionModals
-          isOpen={modal.isOpen}
+          isOpen={modal.isModalOpen(currentType)}
           submissionType={currentType}
           student={currentStudent}
           onClose={handleCloseModal}

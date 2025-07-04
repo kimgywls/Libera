@@ -1,9 +1,9 @@
 import ScoreSubmission2Modal from "./_modal/ScoreSubmission2Modal";
-import { useModal } from "../../hooks/useModal";
+import { useModalState } from "../../hooks/useModalState";
 import { defaultStudent } from "@/app/types/students";
 
 export default function StudentsAddButton() {
-    const { isOpen, open, close } = useModal();
+    const modal = useModalState();
 
     const handlePdfSubmit = async () => {
         try {
@@ -12,7 +12,7 @@ export default function StudentsAddButton() {
 
             // 백엔드에서 데이터 추출이 완료되면 학생이 자동으로 추가됨
             // 여기서는 모달만 닫음
-            close();
+            modal.closeModal("scoreSubmission2");
         } catch (error) {
             console.error('PDF 업로드 실패:', error);
         }
@@ -27,15 +27,15 @@ export default function StudentsAddButton() {
     return (
         <div className="">
             <button
-                onClick={open}
+                onClick={() => modal.openModal("scoreSubmission2")}
                 className="px-5 py-1.5 bg-black/80 hover:bg-black/80 text-white rounded transition-colors whitespace-nowrap"
             >
                 <span className="text-lg">학생 추가</span>
             </button>
 
             <ScoreSubmission2Modal
-                isOpen={isOpen}
-                onClose={close}
+                isOpen={modal.isModalOpen("scoreSubmission2")}
+                onClose={() => modal.closeModal("scoreSubmission2")}
                 student={tempStudent}
                 onSubmit={handlePdfSubmit}
             />
