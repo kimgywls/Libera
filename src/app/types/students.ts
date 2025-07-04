@@ -8,8 +8,8 @@ export interface Student {
   birthdate: string;        // 생년월일
   contact: string;          // 연락처 (주로 부모님)
   currentSchool: string;    // 현재 재학 중인 학교
-  desiredSchool: string;    // 희망 진학 학교
-  desiredMajor: string;     // 희망 전공 / 학과
+  desiredSchool: string[];    // 희망 진학 학교
+  desiredMajor: string[];     // 희망 전공 / 학과
   consultationDate: string;    // 상담 날짜
 }
 
@@ -37,7 +37,7 @@ export const defaultStudent: StudentInput = {
   birthdate: "",         // 생년월일
   contact: "",           // 연락처
   currentSchool: "",     // 현재 학교
-  desiredSchool: "",     // 희망 학교
-  desiredMajor: "",      // 희망 학과
+  desiredSchool: [],     // 희망 학교
+  desiredMajor: [],      // 희망 학과
   consultationDate: "",    // 상담 날짜
 };

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { getStudentCombinedScores } from "../_actions/fetch-parsed-scores";
-import { MonthlyMockTestGrade, MockTestSubmissionData, StudentCombinedScores } from "@/app/types/scores";
+import { StudentMockTestData, StudentCombinedScores, MonthlyMockTestGradeMap } from "@/app/types/scores";
 
 // 특정 학생의 성적 데이터를 관리하는 훅
 export function useStudentAllScores(studentId: string) {
@@ -44,7 +44,7 @@ export function useStudentAllScores(studentId: string) {
     };
 }
 
-function convertMockTestScores(submission: MockTestSubmissionData): Partial<Record<"march" | "june" | "september" | "november", MonthlyMockTestGrade>> {
+function convertMockTestScores(submission: StudentMockTestData): MonthlyMockTestGradeMap {
     return {
         march: submission.scores?.march,
         june: submission.scores?.june,

@@ -2,7 +2,7 @@
 
 import {
     ScoreRowData,
-    MockTestSubmissionData,
+    StudentMockTestData,
 } from "@/app/types/scores";
 
 // 목데이터: 일반 성적 (ScoreRowData[])
@@ -1786,7 +1786,7 @@ const mockScoreRows: ScoreRowData[] = [
 ];
 
 // 목데이터: 모의고사 점수
-const mockMockTestScores: MockTestSubmissionData[] = [
+const mockMockTestScores: StudentMockTestData[] = [
     {
         studentId: "1",
         scores: {
@@ -1900,7 +1900,7 @@ export const fetchParsedScoreRows = async (
 // 모의고사 점수 가져오기
 export const fetchMockTestResults = async (
     studentId: string
-): Promise<MockTestSubmissionData> => {
+): Promise<StudentMockTestData> => {
     const res = await fetch(`${process.env.API_URL}/api/mock-tests/${studentId}`);
     if (!res.ok) throw new Error("모의고사 데이터 요청 실패");
     return res.json();

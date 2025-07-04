@@ -55,6 +55,8 @@ export interface TableSubmissionData {
 // ---------------------------------------------
 // 3. 모의고사 제출용 타입 정의
 // ---------------------------------------------
+
+// 모의고사 성적 타입
 export interface MonthlyMockTestGrade {
   korean: string;
   math: string;
@@ -68,7 +70,7 @@ export interface MonthlyMockTestGrade {
   koreanHistory: string;
 }
 
-export const defaultMonthlyScore: MonthlyMockTestGrade = {
+export const defaultMonthlyMockTestGrade: MonthlyMockTestGrade = {
   korean: '',
   math: '',
   english: '',
@@ -81,17 +83,22 @@ export const defaultMonthlyScore: MonthlyMockTestGrade = {
   koreanHistory: '',
 };
 
-export interface MockTestSubmissionData {
+// 달과 모의고사 성적 맵 타입
+export type MonthlyMockTestGradeMap = Partial<Record<Month, MonthlyMockTestGrade>>;
+
+// 최종 한 학생의 월별 모의고사 성적 데이터 타입
+export interface StudentMockTestData {
   studentId: string;
-  scores: Partial<Record<Month, MonthlyMockTestGrade>>;
+  scores: MonthlyMockTestGradeMap;
 }
+
 
 // ---------------------------------------------
 // 4. 성적 통합 제출 타입 정의 (Union)
 // ---------------------------------------------
 export type ScoreSubmissionData =
   | { type: 'pdf'; data: PdfSubmissionData }
-  | { type: 'mock'; data: MockTestSubmissionData }
+  | { type: 'mock'; data: StudentMockTestData }
   | { type: 'table'; data: TableSubmissionData };
 
 // ---------------------------------------------
@@ -139,14 +146,25 @@ export interface OverallGradeForChart {
 // ---------------------------------------------
 // 8. 비교과(서술형) 평가 타입 정의
 // ---------------------------------------------
+export interface CreativeActivity {
+  freeActivity: string;
+  clubActivity: string;
+  careerActivity: string;
+}
+
+export interface DetailedAndSpecial {
+  subject: string;
+  comment: string;
+}
+
+export interface GeneralOpinion {
+  generalOpinion: string;
+}
+
 export interface NonScoreRowData {
-  creativeActivity: {
-    freeActivity: string;
-    clubActivity: string;
-    careerActivity: string;
-  };
-  detailedAndSpecial: Record<string, string>;
-  generalOpinion?: string;
+  creativeActivity: CreativeActivity;
+  detailedAndSpecial: DetailedAndSpecial[];
+  generalOpinion?: GeneralOpinion;
 }
 
 export type SchoolYearNonScore = {

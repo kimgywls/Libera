@@ -4,8 +4,7 @@ import ScoreSubmissionMockTest from "./_contents/ScoreSubmissionMockTest";
 import { Student } from "@/app/types/students";
 import { SCORE_SUBMISSION_TYPE, SUBMISSION_STATUS } from "@/app/constants";
 import { getModalConfig } from "../../_utils/submitModalConfig";
-import { MonthlyMockTestGrade } from "@/app/types/scores";
-import { Month } from "@/app/constants";
+import { MonthlyMockTestGradeMap } from "@/app/types/scores";
 
 interface ScoreSubmissionMockTestModalProps {
     isOpen: boolean;
@@ -13,7 +12,7 @@ interface ScoreSubmissionMockTestModalProps {
     student: Student;
     onSubmit?: (status: typeof SUBMISSION_STATUS.DONE) => void;
     onSave?: (status: typeof SUBMISSION_STATUS.IN_PROGRESS) => void;
-    initialScores?: Partial<Record<Month, MonthlyMockTestGrade>>; // 초기 모의고사 데이터
+    initialScores?: MonthlyMockTestGradeMap;
 }
 
 export default function ScoreSubmissionMockTestModal({
@@ -56,7 +55,7 @@ export default function ScoreSubmissionMockTestModal({
             <ScoreSubmissionMockTest
                 studentName={student.studentName}
                 contact={student.contact}
-                initialScores={initialScores}
+                initialScores={initialScores as MonthlyMockTestGradeMap}
                 onDataChange={(data) => {
                     console.log("모의고사 제출 데이터:", data);
                     setIsFormValid(true); // 모의고사는 모든 데이터가 필수가 아니므로 기본적으로 유효

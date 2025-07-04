@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import {
-    MockTestSubmissionData,
+    StudentMockTestData,
     MonthlyMockTestGrade,
-    defaultMonthlyScore
+    defaultMonthlyMockTestGrade
 } from "@/app/types/scores";
 import StudentInfoForm from "../../form/StudentInfoForm";
 import MockTestSection from "./ScoreSubmissionMockTestSection";
@@ -14,7 +14,7 @@ import { Month, MOCK_TEST_MONTHS } from "@/app/constants";
 interface ScoreSubmissionMockTestProps {
     contact: string;             // 학생 연락처 (기본값)
     studentName: string;         // 학생 이름 (기본값)
-    onDataChange?: (data: MockTestSubmissionData) => void; // 상위로 제출 데이터 전달 콜백
+    onDataChange?: (data: StudentMockTestData) => void; // 상위로 제출 데이터 전달 콜백
     initialScores?: Partial<Record<Month, MonthlyMockTestGrade>>; // 초기 모의고사 데이터 (수정 시 사용)
 }
 
@@ -39,21 +39,21 @@ export default function ScoreSubmissionMockTest({
                 const result = Object.fromEntries(
                     MOCK_TEST_MONTHS.map((month) => [
                         month,
-                        initialScores[month] || { ...defaultMonthlyScore }
+                        initialScores[month] || { ...defaultMonthlyMockTestGrade }
                     ])
                 ) as Record<Month, MonthlyMockTestGrade>;
                 return result;
             }
             // 초기 데이터가 없으면 기본값으로 초기화
             return Object.fromEntries(
-                MOCK_TEST_MONTHS.map((month) => [month, { ...defaultMonthlyScore }])
+                MOCK_TEST_MONTHS.map((month) => [month, { ...defaultMonthlyMockTestGrade }])
             ) as Record<Month, MonthlyMockTestGrade>;
         }
     );
 
     // 상태 변경 시 상위 컴포넌트로 데이터 전달
     const emitData = (newScores = mockTestData) => {
-        const data: MockTestSubmissionData = {
+        const data: StudentMockTestData = {
             studentId: "", // studentId는 상위에서 전달받아야 함
             scores: newScores,
         };

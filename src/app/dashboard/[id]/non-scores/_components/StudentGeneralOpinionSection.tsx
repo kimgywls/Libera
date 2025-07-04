@@ -18,7 +18,7 @@ export default function StudentGeneralOpinionSection({ studentNonScores }: Stude
                     <GeneralOpinionTable
                         key={year}
                         schoolYear={year}
-                        generalOpinion={activity.generalOpinion || ""}
+                        generalOpinion={activity.generalOpinion || { generalOpinion: "" }}
                     />
                 ))}
         </section>
