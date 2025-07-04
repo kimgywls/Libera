@@ -4,7 +4,7 @@ import SubmitModal from "@/app/components/modal/SubmitModal";
 import { TotalScores } from "@/app/types/scores";
 import SemesterGradeTable from "../SemesterGradeTable";
 
-interface EditSemesterGradeModalProps {
+interface EditSemesterRankGradeModalProps {
     isOpen: boolean;
     onClose: () => void;
     initialGrade: TotalScores;
@@ -12,13 +12,13 @@ interface EditSemesterGradeModalProps {
     onSave: (updated: TotalScores) => void;
 }
 
-export default function EditSemesterGradeModal({
+export default function EditSemesterRankGradeModal({
     isOpen,
     onClose,
     initialGrade,
     onSubmit,
     onSave,
-}: EditSemesterGradeModalProps) {
+}: EditSemesterRankGradeModalProps) {
     return (
         <SubmitModal
             isOpen={isOpen}
