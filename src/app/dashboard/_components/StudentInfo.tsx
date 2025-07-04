@@ -11,7 +11,6 @@ import {
     GraduationCap,
     Calendar
 } from "lucide-react";
-import { useConsultationDate } from "../_hooks/useConsultationDate";
 
 interface StudentInfoProps {
     student: Student;
@@ -19,7 +18,11 @@ interface StudentInfoProps {
 }
 
 export default function StudentInfo({ student, overallGrade }: StudentInfoProps) {
-    const { consultationDate, isEditing, setIsEditing, setConsultationDate, save } = useConsultationDate(student.consultationDate || "");
+    const [consultationDate, setConsultationDate] = useState(student.consultationDate || "");
+
+    const handleConsultationDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConsultationDate(e.target.value);
+    };
 
     // 상담 날짜 포맷팅 함수
     const formatDate = (dateString: string) => {
@@ -30,6 +33,15 @@ export default function StudentInfo({ student, overallGrade }: StudentInfoProps)
             day: 'numeric',
             weekday: 'long'
         });
+    };
+
+    // 상담 일정 저장 함수 (실제로는 API 호출이 필요)
+    const handleSaveConsultation = () => {
+        if (consultationDate) {
+            // 여기서 API 호출로 상담 일정 저장
+            console.log('상담 일정 저장:', consultationDate);
+            // 실제로는 student 객체를 업데이트하거나 부모 컴포넌트에 알려야 함
+        }
     };
 
     return (
@@ -51,35 +63,34 @@ export default function StudentInfo({ student, overallGrade }: StudentInfoProps)
                             <div className="flex items-start space-x-3
                             ">
                                 <div className="flex-1">
-                                    {isEditing ? (
-                                        <div className="flex items-center space-x-3 mt-1">
-                                            <input
-                                                type="date"
-                                                className="border rounded px-2 py-1 text-gray-700 w-full"
-                                                value={consultationDate}
-                                                onChange={(e) => setConsultationDate(e.target.value)}
-                                            />
-                                            <button
-                                                className="px-2 py-2 text-gray-500 text-bold rounded-md hover:bg-green-100 whitespace-nowrap"
-                                                onClick={save}
-                                            >
-                                                저장
-                                            </button>
-                                        </div>
-                                    ) : (
+                                    {consultationDate ? (
                                         <div className="flex items-center space-x-2 mt-1">
                                             <p className="text-lg font-semibold text-gray-900 mt-1 w-full">
                                                 {formatDate(consultationDate)}
                                             </p>
                                             <button
                                                 className="px-3 py-2 text-gray-500 text-bold rounded-md hover:bg-green-100 whitespace-nowrap"
-                                                onClick={() => setIsEditing(true)}
+                                                onClick={handleSaveConsultation}
                                             >
                                                 수정
                                             </button>
                                         </div>
+                                    ) : (
+                                        <div className="flex items-center space-x-3 mt-1">
+                                            <input
+                                                type="date"
+                                                className="border rounded px-2 py-1 text-gray-700 w-full"
+                                                value={consultationDate}
+                                                onChange={handleConsultationDateChange}
+                                            />
+                                            <button
+                                                className="px-2 py-2 text-gray-500 text-bold rounded-md hover:bg-green-100 whitespace-nowrap"
+                                                onClick={handleSaveConsultation}
+                                            >
+                                                등록
+                                            </button>
+                                        </div>
                                     )}
-
                                 </div>
                             </div>
                         </div>
@@ -89,33 +100,33 @@ export default function StudentInfo({ student, overallGrade }: StudentInfoProps)
 
             {/* 정보 섹션 */}
             <div className="p-6">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 h-full items-stretch">
                     {/* 현재 상태 */}
-                    <div className="space-y-2">
+                    <div className="space-y-2 flex flex-col h-full">
                         <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                             <School className="w-5 h-5 text-blue-600 mr-2" />
                             현재 상태
                         </h3>
 
-                        <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="bg-gray-50 rounded-lg p-4 flex-1">
                             <div className="flex items-start space-x-3">
                                 <MapPin className="w-5 h-5 text-blue-500 mt-0.5" />
                                 <div>
-                                    <p className="text-sm font-medium text-gray-700">재학 중인 학교</p>
-                                    <p className="text-lg font-semibold text-gray-900 mt-1">
+                                    <p className="font-semibold text-gray-700">재학 중인 학교</p>
+                                    <p className="text-gray-900 mt-1">
                                         {student.currentSchool}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="bg-gray-50 rounded-lg p-4 flex-1">
                             <div className="flex items-start space-x-3">
                                 <TrendingUp className="w-5 h-5 text-blue-500 mt-0.5" />
                                 <div>
-                                    <p className="text-sm font-medium text-gray-700">전체 내신 성적</p>
-                                    <p className="text-lg font-semibold text-gray-900 mt-1">
-                                        {overallGrade ? overallGrade.toString() : "미입력"}
+                                    <p className="font-semibold text-gray-700">전체 내신 성적</p>
+                                    <p className="text-gray-900 mt-1">
+                                        {overallGrade}등급
                                     </p>
                                 </div>
                             </div>
@@ -123,38 +134,40 @@ export default function StudentInfo({ student, overallGrade }: StudentInfoProps)
                     </div>
 
                     {/* 목표 설정 */}
-                    <div className="space-y-2">
+                    <div className="space-y-2 flex flex-col h-full">
                         <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                             <Target className="w-5 h-5 text-red-500 mr-2" />
                             진학 목표
                         </h3>
 
-                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-100 flex-1">
                             <div className="flex items-start space-x-3">
                                 <GraduationCap className="w-5 h-5 text-red-500 mt-0.5" />
                                 <div className="flex-1">
-                                    <p className="text-sm font-medium text-gray-700">목표 대학</p>
-                                    <p className="text-lg font-semibold text-gray-900 mt-1">
-                                        {student.desiredSchool}
-                                    </p>
+                                    <p className="font-semibold text-gray-700">목표 대학</p>
+                                    {student.desiredSchool.map((school, index) => (
+                                        <p key={`school-${index}`} className=" text-gray-900 mt-1">
+                                            - {school}
+                                        </p>
+                                    ))}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                        <div className="bg-gray-50 rounded-lg p-4 border border-gray-100 flex-1">
                             <div className="flex items-start space-x-3">
                                 <BookOpen className="w-5 h-5 text-red-500 mt-0.5" />
                                 <div className="flex-1">
-                                    <p className="text-sm font-medium text-gray-700">희망 전공</p>
-                                    <p className="text-lg font-semibold text-gray-900 mt-1">
-                                        {student.desiredMajor}
-                                    </p>
+                                    <p className="font-semibold text-gray-700">희망 전공</p>
+                                    {student.desiredMajor.map((major, index) => (
+                                        <p key={`major-${index}`} className="text-gray-900 mt-1">
+                                            - {major}
+                                        </p>
+                                    ))}
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
