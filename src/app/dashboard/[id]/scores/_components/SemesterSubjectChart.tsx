@@ -1,4 +1,4 @@
-import { ResponsiveContainer, ComposedChart, XAxis, YAxis, Bar, Tooltip, LabelList, LabelProps } from "recharts";
+import { ResponsiveContainer, ComposedChart, XAxis, YAxis, Bar, Tooltip, LabelList } from "recharts";
 import { Play } from "lucide-react";
 import { Subject } from "@/app/constants";
 import { OverallGradeForChart } from "@/app/types/scores";

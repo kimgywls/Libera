@@ -73,14 +73,34 @@ export default function StudentsRow({
             <td className="px-4 py-3">{student.currentSchool}</td>
 
             {/* 희망 학교 */}
-            <td className="px-4 py-3">{student.desiredSchool}</td>
+            <td className="p-4 ">
+                {student.desiredSchool.length > 0 ? (
+                    student.desiredSchool.map((school, index) => (
+                        <div key={index}>- {school}</div>
+                    ))
+                ) : (
+                    <div>-</div>
+                )}
+            </td>
+
 
             {/* 희망 학과 */}
-            <td className="px-4 py-3">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-800">
-                    {student.desiredMajor}
-                </span>
+            <td className="px-4 py-3 h-[120px] flex flex-col justify-center items-center">
+                {student.desiredMajor.length > 0 ? (
+                    student.desiredMajor.map((major, index) => (
+                        <span
+                            key={index}
+                            className="mb-2 inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-800"
+                        >
+                            {major}
+                        </span>
+                    ))
+                ) : (
+                    <div>-</div>
+                )}
             </td>
+
+
 
             {/* 성적 제출 상태 드롭다운 */}
             <td className="px-4 py-3">

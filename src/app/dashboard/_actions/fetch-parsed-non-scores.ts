@@ -13,11 +13,13 @@ const mockNonScoreRows: NonScoreSummary[] = [
                     clubActivity: "환경 동아리에서 활동하며 교내 캠페인을 주도함",
                     careerActivity: "수의사 직업체험을 통해 진로 인식 형성",
                 },
-                detailedAndSpecial: {
-                    수학: "수학 개념 이해도가 뛰어남",
-                    영어: "어휘력이 좋음",
+                detailedAndSpecial: [
+                    { subject: "수학", comment: "수학 개념 이해도가 뛰어남" },
+                    { subject: "영어", comment: "어휘력이 좋음" },
+                ],
+                generalOpinion: {
+                    generalOpinion: "학업에 열의가 있고 태도가 성실함",
                 },
-                generalOpinion: "학업에 열의가 있고 태도가 성실함",
             },
             2: {
                 creativeActivity: {
@@ -25,10 +27,12 @@ const mockNonScoreRows: NonScoreSummary[] = [
                     clubActivity: "독서토론 동아리에서 의견 발표 능력 향상",
                     careerActivity: "글쓰기 관련 진로 탐색 활동 수행",
                 },
-                detailedAndSpecial: {
-                    국어: "글쓰기 능력이 우수함",
+                detailedAndSpecial: [
+                    { subject: "국어", comment: "글쓰기 능력이 우수함" },
+                ],
+                generalOpinion: {
+                    generalOpinion: "긍정적인 태도로 친구들과 잘 어울림",
                 },
-                generalOpinion: "긍정적인 태도로 친구들과 잘 어울림",
             },
             3: {
                 creativeActivity: {
@@ -36,10 +40,10 @@ const mockNonScoreRows: NonScoreSummary[] = [
                     clubActivity: "환경 동아리에서 활동하며 교내 캠페인을 주도함",
                     careerActivity: "수의사 직업체험을 통해 진로 인식 형성",
                 },
-                detailedAndSpecial: {
-                    수학: "그래프에 대한 개념 이해도가 뛰어남",
-                    영어: "영어 말하기 대회 동상 수상",
-                },
+                detailedAndSpecial: [
+                    { subject: "수학", comment: "그래프에 대한 개념 이해도가 뛰어남" },
+                    { subject: "영어", comment: "영어 말하기 대회 동상 수상" },
+                ],
             },
         },
     },
@@ -52,11 +56,13 @@ const mockNonScoreRows: NonScoreSummary[] = [
                     clubActivity: "과학 동아리에서 실험 주도",
                     careerActivity: "의사 직업에 대한 진로체험 수행",
                 },
-                detailedAndSpecial: {
-                    국어: "책을 많이 읽고 글로 표현하는 능력이 좋음",
-                    과학: "실험에 대한 이해도가 높음",
+                detailedAndSpecial: [
+                    { subject: "국어", comment: "책을 많이 읽고 글로 표현하는 능력이 좋음" },
+                    { subject: "과학", comment: "실험에 대한 이해도가 높음" },
+                ],
+                generalOpinion: {
+                    generalOpinion: "적극적인 수업 태도를 보임",
                 },
-                generalOpinion: "적극적인 수업 태도를 보임",
             },
             2: {
                 creativeActivity: {
@@ -64,10 +70,12 @@ const mockNonScoreRows: NonScoreSummary[] = [
                     clubActivity: "미술 동아리에서 작품 전시 참여",
                     careerActivity: "디자인 진로탐색 보고서 작성",
                 },
-                detailedAndSpecial: {
-                    미술: "창의적 사고를 자주 보여줌",
+                detailedAndSpecial: [
+                    { subject: "미술", comment: "창의적 사고를 자주 보여줌" },
+                ],
+                generalOpinion: {
+                    generalOpinion: "조용하지만 집중력이 뛰어난 학생",
                 },
-                generalOpinion: "조용하지만 집중력이 뛰어난 학생",
             },
             3: {
                 creativeActivity: {
@@ -75,10 +83,10 @@ const mockNonScoreRows: NonScoreSummary[] = [
                     clubActivity: "환경 동아리에서 활동하며 교내 캠페인을 주도함",
                     careerActivity: "수의사 직업체험을 통해 진로 인식 형성",
                 },
-                detailedAndSpecial: {
-                    수학: "수학 개념 이해도가 뛰어남",
-                    영어: "어휘력이 좋음",
-                },
+                detailedAndSpecial: [
+                    { subject: "수학", comment: "수학 개념 이해도가 뛰어남" },
+                    { subject: "영어", comment: "어휘력이 좋음" },
+                ],
             },
         },
     },
