@@ -1,14 +1,24 @@
-import NonScoreModifyButton from "./NonScoreModifyButton";
+import { DetailedAndSpecial } from "@/app/types/scores";
+import NonScoreModifyButton from "../../../../components/ui/EditRecordButton";
 
 interface DetailedAndSpecialTableProps {
     schoolYear: string;
-    detailedAndSpecial: Record<string, string>;
+    detailedAndSpecial: DetailedAndSpecial[];
+    isEditable?: boolean;
+    onChange?: (key: string, value: string) => void;
 }
 
 export default function DetailedAndSpecialTable({
     schoolYear,
     detailedAndSpecial,
+    isEditable = false,
+    onChange,
 }: DetailedAndSpecialTableProps) {
+    const activities = detailedAndSpecial.map((item) => ({
+        key: item.subject,
+        label: item.subject,
+        value: item.comment,
+    }));
 
     return (
         <div className="rounded-lg p-4 bg-white shadow-sm border border-gray-200 mb-6">
@@ -16,8 +26,14 @@ export default function DetailedAndSpecialTable({
                 <h3 className="text-2xl font-semibold text-gray-900">
                     {schoolYear}학년
                 </h3>
-                <div className="mr-2">
-                    <NonScoreModifyButton />
+                <div className={`${isEditable ? "hidden" : "block"} mr-2`}>
+                    <NonScoreModifyButton
+                        recordType="detailedAndSpecial"
+                        schoolYear={schoolYear}
+                        initialData={detailedAndSpecial}
+                        onSubmit={() => { }}
+                        onSave={() => { }}
+                    />
                 </div>
             </div>
 
@@ -34,13 +50,22 @@ export default function DetailedAndSpecialTable({
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.entries(detailedAndSpecial).map(([key, value], index) => (
-                            <tr key={key} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                        {activities.map((activity, index) => (
+                            <tr key={activity.key} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                                 <td className="border border-gray-200 px-4 py-6 text-center font-medium text-gray-700 ">
-                                    {key}
+                                    {activity.label}
                                 </td>
-                                <td className="border border-gray-200 px-4 py-6 text-center text-gray-700 ">
-                                    {value || "-"}
+                                <td className="border border-gray-200 p-4 text-center text-gray-700 ">
+                                    {isEditable ? (
+                                        <textarea
+                                            rows={4}
+                                            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400 focus:border-violet-500"
+                                            value={activity.value || ""}
+                                            onChange={(e) => onChange?.(activity.key, e.target.value)}
+                                        />
+                                    ) : (
+                                        activity.value || "-"
+                                    )}
                                 </td>
                             </tr>
                         ))}

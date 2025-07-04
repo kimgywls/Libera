@@ -1,13 +1,18 @@
-import NonScoreModifyButton from "./NonScoreModifyButton";
+import NonScoreModifyButton from "../../../../components/ui/EditRecordButton";
+import { GeneralOpinion } from "@/app/types/scores";
 
 interface GeneralOpinionTableProps {
     schoolYear: string;
-    generalOpinion: string;
+    generalOpinion: GeneralOpinion;
+    isEditable?: boolean;
+    onChange?: (key: string, value: string) => void;
 }
 
 export default function GeneralOpinionTable({
     schoolYear,
     generalOpinion,
+    isEditable = false,
+    onChange,
 }: GeneralOpinionTableProps) {
 
     return (
@@ -16,8 +21,14 @@ export default function GeneralOpinionTable({
                 <h3 className="text-2xl font-semibold text-gray-900">
                     {schoolYear}학년
                 </h3>
-                <div className="mr-2">
-                    <NonScoreModifyButton />
+                <div className={`${isEditable ? "hidden" : "block"} mr-2`}>
+                    <NonScoreModifyButton
+                        recordType="generalOpinion"
+                        schoolYear={schoolYear}
+                        initialData={generalOpinion}
+                        onSubmit={() => { }}
+                        onSave={() => { }}
+                    />
                 </div>
             </div>
 
@@ -38,8 +49,17 @@ export default function GeneralOpinionTable({
                             <td className="border border-gray-200 px-4 py-6 text-center font-medium text-gray-700 ">
                                 {schoolYear}학년
                             </td>
-                            <td className="border border-gray-200 px-4 py-6 text-center font-medium text-gray-700 ">
-                                {generalOpinion || "-"}
+                            <td className="border border-gray-200 p-4 text-center font-medium text-gray-700 ">
+                                {isEditable ? (
+                                    <textarea
+                                        className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-violet-400 focus:border-violet-500"
+                                        rows={4}
+                                        value={generalOpinion.generalOpinion || ""}
+                                        onChange={(e) => onChange?.("generalOpinion", e.target.value)}
+                                    />
+                                ) : (
+                                    generalOpinion.generalOpinion || "-"
+                                )}
                             </td>
                         </tr>
                     </tbody>

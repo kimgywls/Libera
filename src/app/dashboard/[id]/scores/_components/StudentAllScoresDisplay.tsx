@@ -3,12 +3,12 @@
 import { ScoreRowData, StudentCombinedScores } from "@/app/types/scores";
 import { Student } from "@/app/types/students";
 import { useStudentTotalGrade } from "@/app/dashboard/_hooks/useStudentTotalGrade";
-import { useModalState } from "@/app/hooks/useModalState";
 import StudentInfo from "../../../_components/StudentInfo";
+import StudentAttendanceSection from "./StudentAttendanceSection";
 import StudentGradeSection from "./StudentGradeSection";
 import MockTestSection from "./MockTestSection";
 import SemesterRankGradeSection from "./SemesterRankGradeSection";
-import SemesterGradeChartSection from "./SemesterGradeChartSection";
+import SemesterGradeChartSection from "./SemesterRankGradeChartSection";
 
 interface StudentAllScoresDisplayProps {
     studentCombinedScores: StudentCombinedScores;
@@ -21,7 +21,6 @@ export default function StudentAllScoresDisplay({
 }: StudentAllScoresDisplayProps) {
     const { subjectScores, mockTestScores } = studentCombinedScores;
     const { studentTotalGrade } = useStudentTotalGrade(student.id);
-    const modalState = useModalState();
 
     const gradesBySemester = subjectScores.reduce((acc, score) => {
         if (!acc[score.semester]) {
@@ -35,22 +34,23 @@ export default function StudentAllScoresDisplay({
         <div className="space-y-6">
             <StudentInfo student={student} overallGrade={studentTotalGrade!.overallGrade} />
 
+            <StudentAttendanceSection
+                student={student}
+            />
+
             <StudentGradeSection
                 gradesBySemester={gradesBySemester}
                 student={student}
-                modalState={modalState}
             />
 
             <MockTestSection
                 mockTestScores={mockTestScores}
                 student={student}
-                modalState={modalState}
             />
 
             <SemesterRankGradeSection
                 totalGrade={studentTotalGrade!}
                 student={student}
-                modalState={modalState}
             />
 
             <SemesterGradeChartSection
