@@ -17,7 +17,7 @@ export const SEMESTER = {
 
 export type Semester = typeof SEMESTER[keyof typeof SEMESTER];
 
-// 과목 상수
+// 전체 과목 상수
 export const SUBJECTS = [
     "국어",
     "영어",
@@ -35,6 +35,18 @@ export const SUBJECTS = [
 
 export type Subject = (typeof SUBJECTS)[number];
 
+// 차트 표시 과목 상수
+export const DISPLAY_SUBJECTS = [
+    "전과목",
+    "국+수+영+사(한)+과",
+    "국+수+영+과",
+    "국+수+영+사(한)",
+    "수학",
+    "영어",
+    "국어",
+] as const;
+
+export type DisplayChartSubject = (typeof DISPLAY_SUBJECTS)[number];
 
 export const SUBJECT_TYPES = ["일반선택", "진로선택", "체육/예술"] as const;
 export type SubjectType = (typeof SUBJECT_TYPES)[number];
