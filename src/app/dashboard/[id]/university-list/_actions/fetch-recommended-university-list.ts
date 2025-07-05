@@ -186,10 +186,81 @@ export const mockUniversityList: StudentRecommendedUniversityList[] = [
             },
         ],
     },
+
+    {
+        studentId: "2",
+        universityList: [
+            {
+                region: "서울",
+                universityName: "서울대학교",
+                admissionType: "수시",
+                admissionCategory: "일반전형",
+                departmentName: "행정학과",
+                evaluationRatio: "수능 100%",
+                entryScore2024: "1.7등급",
+                judgement2024: "도전",
+                entryScore2025: "1.6등급",
+                judgement2025: "적정",
+            },
+            {
+                region: "서울",
+                universityName: "고려대학교",
+                admissionType: "수시",
+                admissionCategory: "일반전형",
+                departmentName: "경영학과",
+                evaluationRatio: "학생부 70%, 면접 30%",
+                entryScore2024: "1.2등급",
+                judgement2024: "안정",
+                entryScore2025: "1.3등급",
+                judgement2025: "적정",
+            },
+            {
+                region: "서울",
+                universityName: "성균관대학교",
+                admissionType: "수시",
+                admissionCategory: "일반전형",
+                departmentName: "경영학과",
+                evaluationRatio: "학생부 70%, 면접 30%",
+                entryScore2024: "1.2등급",
+                judgement2024: "안정",
+                entryScore2025: "1.3등급",
+                judgement2025: "적정",
+            },
+        ],
+    },
+    {
+        studentId: "3",
+        universityList: [
+            {
+                region: "서울",
+                universityName: "연세대학교",
+                admissionType: "수시",
+                admissionCategory: "일반전형",
+                departmentName: "컴퓨터공학과",
+                evaluationRatio: "학생부 70%, 면접 30%",
+                entryScore2024: "1.2등급",
+                judgement2024: "안정",
+                entryScore2025: "1.3등급",
+                judgement2025: "적정",
+            },
+            {
+                region: "서울",
+                universityName: "연세대학교",
+                admissionType: "수시",
+                admissionCategory: "일반전형",
+                departmentName: "컴퓨터공학과",
+                evaluationRatio: "학생부 70%, 면접 30%",
+                entryScore2024: "1.2등급",
+                judgement2024: "안정",
+                entryScore2025: "1.3등급",
+                judgement2025: "적정",
+            },
+        ],
+    },
 ];
 
-
-export const getRecommandUniversityListAction = async () => {
-    // 추후 fetch("/api/students") 등으로 대체 예정
-    return mockUniversityList;
+export const getRecommendedUniversityListAction = async (studentId: string) => {
+    // 실제 fetch로 대체 예정
+    const found = mockUniversityList.find(item => item.studentId === studentId);
+    return found?.universityList ?? [];
 };

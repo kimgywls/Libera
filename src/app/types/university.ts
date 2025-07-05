@@ -15,3 +15,7 @@ export interface University {
     entryScore2025: string;
     judgement2025: string;
 }
+
+export interface SelectedUniversityPayload {
+    universities: University[];
+}

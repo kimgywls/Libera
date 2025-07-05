@@ -1,18 +1,18 @@
 "use client";
 
-import { useStudentTotalGrade } from "@/app/dashboard/_hooks/useStudentTotalGrade";
+import { useStudentTotalGrade } from "@/app/dashboard/[id]/scores/_hooks/use-student-total-grade";
 import StudentInfo from "../../../_components/StudentInfo";
-import { StudentRecommendedUniversityList } from "@/app/types/university";
+import { University } from "@/app/types/university";
 import { Student } from "@/app/types/students";
 import UniversityListSection from "./UniversityListSection";
 
 interface UniversityListDisplayProps {
     student: Student;
-    recommandUniversityList: StudentRecommendedUniversityList[];
+    universityList: University[];
 }
 
 export default function UniversityListDisplay({
-    recommandUniversityList,
+    universityList,
     student,
 }: UniversityListDisplayProps) {
     const { studentTotalGrade } = useStudentTotalGrade(student.id);
@@ -20,10 +20,7 @@ export default function UniversityListDisplay({
     return (
         <div className="space-y-6">
             <StudentInfo student={student} overallGrade={studentTotalGrade!.overallGrade} />
-
-            <UniversityListSection
-                recommandUniversityList={recommandUniversityList}
-            />
+            <UniversityListSection universityList={universityList} />
         </div>
     );
 }

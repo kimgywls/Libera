@@ -1,7 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { University } from '@/app/types/university';
-import UniversityTableSearchBar from './UniversityTableSearchBar';
-import UniversityTableRegionFilter from './UniversityTableRegionFilter';
 import UniversityTableRow from './UniversityTableRow';
 
 const regions = ['서울', '경기', '인천', '강원', '충북', '충남', '대전', '세종', '전북', '전남', '광주', '경북', '경남', '대구', '울산', '부산', '제주'];
@@ -21,126 +19,31 @@ const searchableFields = [
 
 interface UniversityTableProps {
     universityList: University[];
+    selectedUniversities: number[];
+    setSelectedUniversities: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-export default function UniversityTable({ universityList }: UniversityTableProps) {
-    const [searchInput, setSearchInput] = useState<string>('');
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
-    const [selectedUniversities, setSelectedUniversities] = useState<number[]>([]);
-    const [showRegionFilter, setShowRegionFilter] = useState(false);
-    const [searchField, setSearchField] = useState<string>(searchableFields[0].value);
-
-    // 필터링된 대학 목록
-    const filteredUniversities = useMemo(() => {
-        return universityList.filter((university) => {
-            const value = university[searchField as keyof University] ?? '';
-            const matchesSearch = value.toString().toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesRegion = selectedRegions.length === 0 || selectedRegions.includes(university.region);
-            return matchesSearch && matchesRegion;
-        });
-    }, [universityList, searchTerm, selectedRegions, searchField]);
-
-    // 지역 선택 토글
-    const toggleRegion = (region: string) => {
-        setSelectedRegions(prev =>
-            prev.includes(region)
-                ? prev.filter(r => r !== region)
-                : [...prev, region]
-        );
-    };
-
-    // 대학 선택 토글
-    const toggleUniversity = (universityIdx: number) => {
-        setSelectedUniversities(prev =>
-            prev.includes(universityIdx)
-                ? prev.filter(id => id !== universityIdx)
-                : [...prev, universityIdx]
-        );
-    };
-
+export default function UniversityTable({ universityList, selectedUniversities, setSelectedUniversities }: UniversityTableProps) {
     // 전체 선택/해제
     const toggleSelectAll = () => {
-        if (selectedUniversities.length === filteredUniversities.length) {
+        if (selectedUniversities.length === universityList.length) {
             setSelectedUniversities([]);
         } else {
-            setSelectedUniversities(filteredUniversities.map((_, idx) => idx));
+            setSelectedUniversities(universityList.map((_, idx) => idx));
         }
     };
 
-    // 선택된 대학 추출
-    const handleExtractSelected = () => {
-        const selectedData = filteredUniversities.filter((_, idx) => selectedUniversities.includes(idx));
-        alert(`${selectedData.length}개 대학이 선택되었습니다.`);
-    };
-
-    // 지역 필터 초기화
-    const clearRegionFilter = () => {
-        setSelectedRegions([]);
-    };
-
-    // 검색 실행 함수
-    const handleSearch = () => {
-        setSearchTerm(searchInput);
-    };
-
-    // 엔터 입력 시 검색
-    const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
+    // 개별 선택/해제
+    const toggleUniversity = (idx: number) => {
+        setSelectedUniversities(prev =>
+            prev.includes(idx)
+                ? prev.filter(i => i !== idx)
+                : [...prev, idx]
+        );
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 min-h-[600px] my-4 ">
-            {/* 헤더 */}
-            <div className="border-b border-gray-200 px-6 py-4">
-                <div className="flex items-center w-full justify-between gap-4">
-                    {/* 검색바 */}
-                    <UniversityTableSearchBar
-                        searchInput={searchInput}
-                        setSearchInput={setSearchInput}
-                        handleInputKeyDown={handleInputKeyDown}
-                        searchField={searchField}
-                        setSearchField={setSearchField}
-                        handleSearch={handleSearch}
-                        searchFields={searchableFields as any}
-                    />
-                    {/* 지역 필터 */}
-                    <UniversityTableRegionFilter
-                        selectedRegions={selectedRegions}
-                        setShowRegionFilter={setShowRegionFilter}
-                        showRegionFilter={showRegionFilter}
-                        regions={regions}
-                        toggleRegion={toggleRegion}
-                        clearRegionFilter={clearRegionFilter}
-                    />
-                </div>
-                {/* 선택된 지역 표시 */}
-                {selectedRegions.length > 0 && (
-                    <div className="mt-3 flex items-center space-x-2">
-                        <span className="text-sm text-gray-600">선택된 지역:</span>
-                        <div className="flex flex-wrap gap-2">
-                            {selectedRegions.map(region => (
-                                <span
-                                    key={region}
-                                    className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-violet-100 text-violet-800"
-                                >
-                                    {region}
-                                    <button
-                                        onClick={() => toggleRegion(region)}
-                                        className="ml-2 text-violet-600 hover:text-violet-800"
-                                    >
-                                        ×
-                                    </button>
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* 테이블 */}
+        <div>
             <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                     <thead>
@@ -148,7 +51,7 @@ export default function UniversityTable({ universityList }: UniversityTableProps
                             <th className="border border-gray-200 px-4 py-3 text-center w-12">
                                 <input
                                     type="checkbox"
-                                    checked={filteredUniversities.length > 0 && selectedUniversities.length === filteredUniversities.length}
+                                    checked={universityList.length > 0 && selectedUniversities.length === universityList.length}
                                     onChange={toggleSelectAll}
                                     className="rounded border-gray-300 text-violet-600 focus:ring-violet-500"
                                 />
@@ -167,14 +70,14 @@ export default function UniversityTable({ universityList }: UniversityTableProps
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUniversities.length === 0 ? (
+                        {universityList.length === 0 ? (
                             <tr>
                                 <td colSpan={12} className="text-center text-gray-500 py-8">
                                     검색 결과가 없습니다.
                                 </td>
                             </tr>
                         ) : (
-                            filteredUniversities.map((university, idx) => (
+                            universityList.map((university, idx) => (
                                 <UniversityTableRow
                                     key={university.universityName + university.departmentName + university.admissionType}
                                     university={university}
@@ -187,23 +90,6 @@ export default function UniversityTable({ universityList }: UniversityTableProps
                     </tbody>
                 </table>
             </div>
-
-            {/* 푸터 정보 */}
-            <div className="border-t border-gray-200 px-6 py-3 bg-gray-50">
-                <div className="flex items-center justify-between text-sm text-gray-600">
-                    <span>총 {filteredUniversities.length}개 대학</span>
-                    <button
-                        onClick={handleExtractSelected}
-                        disabled={selectedUniversities.length === 0}
-                        className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${selectedUniversities.length > 0
-                            ? 'bg-violet-600 text-white hover:bg-violet-700'
-                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                            }`}
-                    >
-                        <span>({selectedUniversities.length}) 개의 학교 선택</span>
-                    </button>
-                </div>
-            </div>
         </div>
-    );
+    )
 }
