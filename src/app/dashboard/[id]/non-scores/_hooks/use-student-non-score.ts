@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { getStudentNonScores } from "../_actions/fetch-parsed-non-scores";
-import { NonScoreSummary } from "../../types/scores";
+import { NonScoreSummary } from "@/app/types/scores";
 
 // 특정 학생의 비교과 데이터를 관리하는 훅
 export function useStudentAllNonScore(studentId: string) {

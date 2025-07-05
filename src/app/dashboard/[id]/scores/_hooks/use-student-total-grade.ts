@@ -3,11 +3,7 @@ import { useEffect, useState } from "react";
 import { getStudentTotalGrade } from "../_actions/fetch-total-grade";
 
 export function useStudentTotalGrade(studentId: string) {
-    const [studentTotalGrade, setStudentTotalGrade] = useState<TotalScores>({
-        studentId,
-        bySemester: {},
-        overallGrade: 0,
-    });
+    const [studentTotalGrade, setStudentTotalGrade] = useState<TotalScores | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -16,14 +12,19 @@ export function useStudentTotalGrade(studentId: string) {
         setError(null);
         try {
             const data = await getStudentTotalGrade(studentId);
-            setStudentTotalGrade({
-                studentId: data.totalScores.studentId,
-                bySemester: data.totalScores.bySemester,
-                overallGrade: data.totalScores.overallGrade,
-            });
+            if (!data.totalScores) {
+                setStudentTotalGrade(null);
+            } else {
+                setStudentTotalGrade({
+                    studentId: data.totalScores.studentId,
+                    bySemester: data.totalScores.bySemester,
+                    overallGrade: data.totalScores.overallGrade,
+                });
+            }
         } catch (err) {
             console.error("학생 성적 데이터를 불러오는데 실패했습니다:", err);
             setError("학생 성적 데이터를 불러오는데 실패했습니다.");
+            setStudentTotalGrade(null);
         } finally {
             setLoading(false);
         }
