@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useFetchStudents } from '@/app/main/_hooks/use-fetch-students';
 import { Student } from '@/app/types/students';
-import { useStudentAllNonScore } from './_hooks/useStudentNonScore';
+import { useStudentAllNonScore } from './_hooks/use-student-non-score';
 import NoDataMessage from '../../_components/NoDataMessage';
 import LoadingState from '../../_components/LoadingState';
 import ErrorState from '../../_components/ErrorState';
