@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import StudentsHeader from "./StudentsHeader";   // 검색 + 버튼 영역
 import StudentsTable from "./StudentsTable";     // 학생 목록 테이블
-import { useFetchStudents } from "../_hooks/useFetchStudents"; // 학생 목록 불러오는 커스텀 훅
+import { useFetchStudents } from "../_hooks/use-fetch-students"; // 학생 목록 불러오는 커스텀 훅
 import { Student } from "@/app/types/students";
 
 // 전체 학생 목록 위젯 컴포넌트

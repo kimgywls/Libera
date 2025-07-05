@@ -1,14 +1,15 @@
 // 필수 import
 import StudentsRow, { EmptyStudentsRow } from "./StudentsRow";
-import { useFetchScoreSubmissions } from "../_hooks/useFetchScoreSubmissions";
+import { useFetchScoreSubmissions } from "../_hooks/use-fetch-score-submissions";
 import { Student } from "@/app/types/students";
 import { SUBMISSION_STATUS, SubmissionStatus, ScoreSubmissionType, SCORE_SUBMISSION_TYPE } from "@/app/constants";
 import { getModalConfig } from "../_utils/submitModalConfig";
 import ScoreSubmissionModals from "./_modal/ScoreSubmissionModals";
 import { useModalState } from "../../hooks/useModalState";
-import { useStudentSelection } from "../_hooks/useStudentSelection";
-import { useStudentsWithStatus } from "../_hooks/useStudentsWithStatus";
-import { useState } from "react";
+import { useStudentSelection } from "../_hooks/use-student-selection";
+import { useStudentsWithStatus } from "../_hooks/use-students-with-status";
+import React, { useState, useRef } from "react";
+import HiddenStudentPDF from "./HiddenStudentPDF";
 
 // 테이블 헤더 정의
 const tableHeaders = [
@@ -44,6 +45,14 @@ export default function StudentsTable({ students }: StudentsTableProps) {
 
   // 모달 상태만 훅에서 관리
   const modal = useModalState();
+
+  // 학생별 pdfRef 관리
+  const pdfRefs = useRef<Record<string, React.RefObject<HTMLDivElement>>>({});
+  studentsWithStatus.forEach(row => {
+    if (!pdfRefs.current[row.student.id]) {
+      pdfRefs.current[row.student.id] = React.createRef<HTMLDivElement>() as React.RefObject<HTMLDivElement>;
+    }
+  });
 
   // 모달 열기
   const handleOpenModal = (student: Student, type: ScoreSubmissionType) => {
@@ -90,25 +99,24 @@ export default function StudentsTable({ students }: StudentsTableProps) {
               </tr>
             </thead>
             <tbody>
-              {studentsWithStatus.length > 0 ? (
-                studentsWithStatus.map(({ student, scoreStatus }, idx) => (
+              {studentsWithStatus.length === 0 ? (
+                <EmptyStudentsRow columnCount={tableHeaders.length} />
+              ) : (
+                studentsWithStatus.map((row, idx) => (
                   <StudentsRow
-                    key={student.contact}
+                    key={row.student.id}
                     index={idx}
-                    student={student}
-                    scoreSubmitted_2={scoreStatus.scoreSubmitted_2 as SubmissionStatus}
-                    scoreSubmitted_3={scoreStatus.scoreSubmitted_3 as SubmissionStatus}
-                    scoreSubmitted_mockTest={scoreStatus.scoreSubmitted_mockTest as SubmissionStatus}
-                    isSelected={selectedStudents.has(student.contact)}
-                    onSelect={(checked) => handleSelectStudent(student.contact, checked)}
-                    onUpdateScoreSubmission={(type, value) =>
-                      updateScoreSubmission(student.contact, type, value as SubmissionStatus)
-                    }
+                    student={row.student}
+                    scoreSubmitted_2={row.scoreStatus.scoreSubmitted_2 as SubmissionStatus}
+                    scoreSubmitted_3={row.scoreStatus.scoreSubmitted_3 as SubmissionStatus}
+                    scoreSubmitted_mockTest={row.scoreStatus.scoreSubmitted_mockTest as SubmissionStatus}
+                    isSelected={selectedStudents.has(row.student.id)}
+                    onSelect={(checked) => handleSelectStudent(row.student.id, checked)}
                     onOpenModal={handleOpenModal}
+                    onUpdateScoreSubmission={(type, value) => updateScoreSubmission(row.student.contact, type, value)}
+                    pdfRef={pdfRefs.current[row.student.id]}
                   />
                 ))
-              ) : (
-                <EmptyStudentsRow columnCount={tableHeaders.length + 1} />
               )}
             </tbody>
           </table>
@@ -140,6 +148,15 @@ export default function StudentsTable({ students }: StudentsTableProps) {
           }}
         />
       )}
+
+      {/* 숨겨진 PDF 컴포넌트는 table 밖에서 렌더링 */}
+      {studentsWithStatus.map((row, idx) => (
+        <HiddenStudentPDF
+          key={row.student.id}
+          student={row.student}
+          pdfRef={pdfRefs.current[row.student.id]}
+        />
+      ))}
     </>
   );
 }
