@@ -23,7 +23,7 @@ export default function SemesterSubjectChart({ subject, chartData }: { subject: 
     // chartData가 비어있거나 undefined인 경우 처리
     if (!chartData || chartData.length === 0) {
         return (
-            <div className="flex flex-col gap-2 border border-gray-300 rounded-lg p-4">
+            <div className="flex flex-col gap-2 border border-gray-300 rounded-lg p-4" style={{ height: 400 }}>
                 <h4 className="flex items-center font-semibold text-lg gap-2">
                     <Play className="w-5 h-5 text-violet-500 mr-2" />
                     {subject} 석차 등급 추이
@@ -36,7 +36,7 @@ export default function SemesterSubjectChart({ subject, chartData }: { subject: 
     }
 
     return (
-        <div className="flex flex-col gap-2 border border-gray-300 rounded-lg p-4">
+        <div className="flex flex-col gap-2 border border-gray-300 rounded-lg p-4" style={{ height: 400 }}>
             <h4 className="flex items-center font-semibold text-lg gap-2">
                 <Play className="w-5 h-5 text-violet-500 mr-2" />
                 {subject} 석차 등급 추이

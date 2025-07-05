@@ -1,8 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useFetchStudents } from "../../../main/_hooks/useFetchStudents";
-import { useStudentAllScores } from "../../_hooks/useStudentAllScores";
+import { useFetchStudents } from "../../../main/_hooks/use-fetch-students";
+import { useStudentAllScores } from "./_hooks/use-student-all-scores";
 import { Student } from "@/app/types/students";
 import StudentAllScoresDisplay from "./_components/StudentAllScoresDisplay";
 import NoGradesMessage from "../../_components/NoDataMessage";
@@ -17,6 +17,7 @@ export default function ScoresPage() {
     const { studentCombinedScores, loading: gradesLoading, error: gradesError } = useStudentAllScores(studentId);
 
     // 학생 목록 로딩 중인 경우
+
     if (studentsLoading || gradesLoading) {
         return <LoadingState data="학생과 성적 데이터" />;
     }

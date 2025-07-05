@@ -1,6 +1,6 @@
 "use client";
 
-import { useStudentTotalGrade } from "@/app/dashboard/_hooks/useStudentTotalGrade";
+import { useStudentTotalGrade } from "@/app/dashboard/[id]/scores/_hooks/use-student-total-grade";
 import { Student } from "@/app/types/students";
 import StudentInfo from "./StudentInfo";
 

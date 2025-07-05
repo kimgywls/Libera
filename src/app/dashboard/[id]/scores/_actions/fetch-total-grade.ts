@@ -235,7 +235,7 @@ const mockTotalScoresList: TotalScores[] = [
 ];
 
 
-export const fetchTotalScores = async (studentId: string): Promise<TotalScores> => {
+export const fetchTotalScores = async (studentId: string): Promise<TotalScores | null> => {
     /*
     const res = await fetch(`${process.env.API_URL}/api/total-scores/${studentId}`);
     if (!res.ok) throw new Error("전체 성적 데이터 요청 실패");
@@ -245,19 +245,19 @@ export const fetchTotalScores = async (studentId: string): Promise<TotalScores> 
     const totalScores = mockTotalScoresList.find((total) => total.studentId === studentId);
 
     if (!totalScores) {
-        throw new Error("해당 학생의 전체 성적 데이터를 찾을 수 없습니다.");
+        // throw new Error("해당 학생의 전체 성적 데이터를 찾을 수 없습니다.");
+        return null;
     }
 
     return totalScores;
 };
 
-export const getStudentTotalGrade = async (studentId: string): Promise<{ totalScores: TotalScores }> => {
+export const getStudentTotalGrade = async (studentId: string): Promise<{ totalScores: TotalScores | null }> => {
     try {
         const totalScores = await fetchTotalScores(studentId);
-
         return { totalScores };
     } catch (error) {
         console.error("📛 성적 데이터를 가져오는 중 오류:", error);
-        throw error;
+        return { totalScores: null };
     }
 };

@@ -1,11 +1,18 @@
 /* eslint-disable */
 "use client";
-
+import { Search } from "lucide-react";
+import { useReactToPrint } from "react-to-print";
 import { useRouter } from "next/navigation";
 import { Student } from "@/app/types/students";
 import { SUBMISSION_STATUS, SubmissionStatus, ScoreSubmissionType } from "@/app/constants";
-import { Search } from "lucide-react";
+import { ScoreRowData, MonthlyMockTestGradeMap, SemesterGrade, OverallGradeForChart } from "@/app/types/scores";
 import SubmissionStatusBadge from "./SubmissionStatusBadge";
+import React, { useRef } from "react";
+import StudentExportPDF from "./StudentExportPDF";
+import { useStudentAllScores } from "@/app/dashboard/[id]/scores/_hooks/use-student-all-scores";
+import { useStudentTotalGrade } from "@/app/dashboard/[id]/scores/_hooks/use-student-total-grade";
+import { getChartDataBySubject } from "@/app/dashboard/[id]/scores/_utils/getChartDataBySubject";
+import { DISPLAY_SUBJECTS } from "@/app/constants";
 
 // Props 타입 정의
 interface StudentsRowProps {
@@ -18,6 +25,7 @@ interface StudentsRowProps {
     onSelect?: (checked: boolean) => void; // 체크박스 변경 핸들러
     onUpdateScoreSubmission?: (type: ScoreSubmissionType, value: SubmissionStatus) => void; // 성적 제출 상태 변경 콜백
     onOpenModal?: (student: Student, type: ScoreSubmissionType) => void; // 모달 열기 콜백
+    pdfRef: React.RefObject<HTMLDivElement>;
 }
 
 // 학생 테이블의 한 줄 컴포넌트
@@ -30,9 +38,15 @@ export default function StudentsRow({
     isSelected = false,
     onSelect,
     onUpdateScoreSubmission,
-    onOpenModal
+    onOpenModal,
+    pdfRef,
 }: StudentsRowProps) {
     const router = useRouter();
+
+    const handlePrint = useReactToPrint({
+        contentRef: pdfRef,
+        documentTitle: `${student.studentName}_성적표`,
+    });
 
     // 행 클릭 시 학생 상세 대시보드로 이동
     const handleRowClick = (e: React.MouseEvent) => {
@@ -40,7 +54,7 @@ export default function StudentsRow({
 
         const target = e.target as HTMLElement;
         const td = target.closest('td');
-        if (td && td.cellIndex === 7) return; // 성적 제출 셀은 클릭 무시
+        if (td && (td.cellIndex === 7 || td.cellIndex === 8)) return; // 성적 제출 셀은 클릭 무시
 
         router.push(`/dashboard/${student.id}/scores`); // scores 페이지로 이동
     };
@@ -137,7 +151,7 @@ export default function StudentsRow({
 
             {/* 내보내기 버튼 */}
             <td className="px-4 py-3">
-                <button className="px-3 py-1.5 bg-gray-600 text-white rounded hover:bg-black transition-colors">
+                <button onClick={handlePrint} className="px-3 py-1.5 bg-gray-600 text-white rounded hover:bg-black transition-colors">
                     내보내기
                 </button>
             </td>

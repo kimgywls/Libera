@@ -3,7 +3,7 @@
 
 import { ScoreRowData, StudentCombinedScores } from "@/app/types/scores";
 import { Student } from "@/app/types/students";
-import { useStudentTotalGrade } from "@/app/dashboard/_hooks/useStudentTotalGrade";
+import { useStudentTotalGrade } from "@/app/dashboard/[id]/scores/_hooks/use-student-total-grade";
 import StudentInfo from "../../../_components/StudentInfo";
 import StudentAttendanceSection from "./StudentAttendanceSection";
 import StudentGradeSection from "./StudentGradeSection";
@@ -23,6 +23,10 @@ export default function StudentAllScoresDisplay({
     const { subjectScores, mockTestScores } = studentCombinedScores;
     const { studentTotalGrade } = useStudentTotalGrade(student.id);
 
+    if (!studentTotalGrade) {
+        return <div>성적 데이터가 없습니다.</div>;
+    }
+
     const gradesBySemester = subjectScores.reduce((acc, score) => {
         if (!acc[score.semester]) {
             acc[score.semester] = [];
@@ -33,7 +37,7 @@ export default function StudentAllScoresDisplay({
 
     return (
         <div className="space-y-6">
-            <StudentInfo student={student} overallGrade={studentTotalGrade!.overallGrade} />
+            <StudentInfo student={student} overallGrade={studentTotalGrade.overallGrade} />
 
             <StudentAttendanceSection
                 student={student}
@@ -50,12 +54,12 @@ export default function StudentAllScoresDisplay({
             />
 */}
             <SemesterRankGradeSection
-                totalGrade={studentTotalGrade!}
+                totalGrade={studentTotalGrade}
                 student={student}
             />
 
             <SemesterGradeChartSection
-                totalGrade={studentTotalGrade!}
+                totalGrade={studentTotalGrade}
             />
         </div>
     );

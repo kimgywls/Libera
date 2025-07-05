@@ -10,7 +10,7 @@ import {
     BarChart3,
 } from 'lucide-react';
 import { useParams } from "next/navigation";
-import { useFetchStudents } from "@/app/main/_hooks/useFetchStudents";
+import { useFetchStudents } from "@/app/main/_hooks/use-fetch-students";
 import { ReactNode } from "react";
 
 // 타입 정의

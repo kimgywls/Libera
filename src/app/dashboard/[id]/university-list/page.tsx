@@ -3,8 +3,8 @@
 import UniversityListDisplay from "./_component/UniversityListDisplay";
 import LoadingState from "../../_components/LoadingState";
 import ErrorState from "../../_components/ErrorState";
-import { useFetchRecommandUniversityList } from "./_hooks/useFetchRecommandUniversity";
-import { useFetchStudents } from "@/app/main/_hooks/useFetchStudents";
+import { useFetchRecommendedUniversityList } from "./_hooks/use-fetch-recommended-university";
+import { useFetchStudents } from "@/app/main/_hooks/use-fetch-students";
 import StudentNotFound from "../../_components/StudentNotFound";
 import { useParams } from "next/navigation";
 import { Student } from "@/app/types/students";
@@ -13,7 +13,7 @@ export default function UniversityListPage() {
     const params = useParams();
     const studentId = params.id as string;
 
-    const { recommandUniversityList, loading: universityListLoading, error: universityListError } = useFetchRecommandUniversityList();
+    const { universityList, loading: universityListLoading, error: universityListError } = useFetchRecommendedUniversityList(studentId);
     const { students, loading: studentsLoading, error: studentsError } = useFetchStudents();
 
     // 학생과 추천 대학 목록 로딩 중인 경우
@@ -45,5 +45,5 @@ export default function UniversityListPage() {
     }
 
     // 대학 목록 데이터가 있는 경우
-    return <UniversityListDisplay student={currentStudent} recommandUniversityList={recommandUniversityList} />;
+    return <UniversityListDisplay student={currentStudent} universityList={universityList} />;
 } 
