@@ -1,7 +1,5 @@
-
-import { NonScoreSummary } from "@/app/types/scores";
 import { Student } from "@/app/types/students";
-import StudentInfoWithGrade from "@/app/dashboard/_components/StudentInfoWithGrade";
+import StudentInfo from "@/app/dashboard/_components/StudentInfo";
 import StudentCreativeActiveSection from "./StudentCreativeActiveSection";
 import StudentDetailedAndSpecialSection from "./StudentDetailedAndSpecialSection";
 import StudentGeneralOpinionSection from "./StudentGeneralOpinionSection";
@@ -15,7 +13,7 @@ export default function StudentNonScoreSummaryDisplay({ studentNonScores, studen
 
     return (
         <div className="space-y-6">
-            <StudentInfoWithGrade student={student} />
+            <StudentInfo student={student} />
 
             <StudentCreativeActiveSection
                 studentNonScores={studentNonScores}

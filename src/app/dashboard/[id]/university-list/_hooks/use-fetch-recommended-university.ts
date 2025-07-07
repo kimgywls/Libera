@@ -1,25 +1,29 @@
-import { useState, useEffect } from "react";
-import { getRecommendedUniversityListAction } from "../_actions/fetch-recommended-university-list";
-import { University } from "@/app/types/university";
+import { useEffect, useState } from "react";
+import { fetchRecommendedUniversityListAction } from "../_actions/fetch-recommened-university-list";
+import { FetchDepartmentRecommendationListResponse } from "@/app/types/university";
 
-// 추천 대학 목록 조회 훅
-export function useFetchRecommendedUniversityList(studentId: string) {
-    const [universityList, setUniversityList] = useState<University[]>([]);
-    const [loading, setLoading] = useState(true);
+export function useFetchRecommendedUniversityList(student_id: number) {
+    const [recommendedUniversityList, setRecommendedUniversityList] = useState<FetchDepartmentRecommendationListResponse | null>(null);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchRecommendedUniversityList = async () => {
+    const fetch = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            const data = await getRecommendedUniversityListAction(studentId);
-            setUniversityList(data);
-        } catch {
+            const res = await fetchRecommendedUniversityListAction(student_id);
+            console.log("useFetchRecommendedUniversityList", res);
+            setRecommendedUniversityList(res);
+        } catch (e) {
             setError("불러오기 실패");
         } finally {
             setLoading(false);
         }
     };
 
-    useEffect(() => { fetchRecommendedUniversityList(); }, [studentId]);
+    useEffect(() => {
+        fetch();
+    }, [student_id]);
 
-    return { universityList, loading, error, reload: fetchRecommendedUniversityList };
+    return { recommendedUniversityList, loading, error, reload: fetch };
 }

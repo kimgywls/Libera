@@ -1,58 +1,72 @@
-import React, { useState, useMemo } from 'react';
-import { University } from '@/app/types/university';
-import UniversityTableSearchBar from './UniversityTableSearchBar';
-import UniversityTableRegionFilter from './UniversityTableRegionFilter';
-import UniversityTable from './UniversityTable';
-import { useSendSelectedUniversities } from '../_hooks/use-send-selected-universities';
-import { useModalState } from '@/app/hooks/useModalState';
-import AlertModal from '@/app/components/modal/AlertModal';
-
-const regions = ['서울', '경기', '인천', '강원', '충북', '충남', '대전', '세종', '전북', '전남', '광주', '경북', '경남', '대구', '울산', '부산', '제주'];
-
-// University 타입에서 검색 가능한 필드만 추출
-const searchableFields = [
-    { label: '대학명', value: 'universityName' },
-    { label: '전형', value: 'admissionType' },
-    { label: '전형 구분', value: 'admissionCategory' },
-    { label: '학과명', value: 'departmentName' },
-    { label: '평가 비율', value: 'evaluationRatio' },
-    { label: '2024 입결', value: 'entryScore2024' },
-    { label: '2024 판정', value: 'judgement2024' },
-    { label: '2025 입결', value: 'entryScore2025' },
-    { label: '2025 판정', value: 'judgement2025' },
-] as const;
+import UniversityTable from "./UniversityTable";
+import UniversityTableSearchBar from "./UniversityTableSearchBar";
+import UniversityTableRegionFilter from "./UniversityTableRegionFilter";
+import { DepartmentRecommendation } from "@/app/types/university";
+import { useState, useMemo } from "react";
 
 interface UniversityListSectionProps {
-    universityList: University[];
+    department: DepartmentRecommendation;
 }
 
-export default function UniversityListSection({ universityList }: UniversityListSectionProps) {
-    if (!universityList) return null;
+export interface UniversityTableRow {
+    order: number;
+    admission_id: number;
+    university_name: string;
+    region: string;
+    admission_category: string;
+    admission_type: string;
+    major_name: string;
+    evaluation_ratio: string;
+    entry_score_2024: string;
+    entry_score_2025: string;
+    judge: "도전" | "적정" | "안정";
+}
 
-    const [searchInput, setSearchInput] = useState<string>('');
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
-    const [selectedUniversities, setSelectedUniversities] = useState<number[]>([]);
+function flattenUniversities(dept: DepartmentRecommendation): UniversityTableRow[] {
+    let idx = 1;
+    const mapFn = (u: any, judge: "도전" | "적정" | "안정") => ({
+        order: idx++,
+        admission_id: u.admission_id,
+        university_name: u.university_name ?? "",
+        region: u.region ?? "",
+        admission_category: u.admission_category ?? "",
+        admission_type: u.admission_type ?? "",
+        major_name: u.major_name ?? "",
+        evaluation_ratio: u.competition_ratio ?? "",
+        entry_score_2024: u.grade_cutoff_prev1 ?? "",
+        entry_score_2025: u.grade_cutoff_current ?? "",
+        judge,
+    });
+    return [
+        ...(dept.challenge ?? []).map(u => mapFn(u, "도전")),
+        ...(dept.suitable ?? []).map(u => mapFn(u, "적정")),
+        ...(dept.safe ?? []).map(u => mapFn(u, "안정")),
+    ];
+}
+
+const SEARCH_FIELDS = [
+    { label: "대학명", value: "university_name" },
+    { label: "학과명", value: "major_name" },
+    { label: "전형", value: "admission_type" },
+    { label: "유형 구분", value: "admission_category" },
+];
+
+export default function UniversityListSection({ department }: UniversityListSectionProps) {
+    const [checked, setChecked] = useState<{ [admission_id: number]: boolean }>({});
+    const [searchInput, setSearchInput] = useState("");
+    const [searchField, setSearchField] = useState(SEARCH_FIELDS[0].value);
     const [showRegionFilter, setShowRegionFilter] = useState(false);
-    const [searchField, setSearchField] = useState<string>(searchableFields[0].value);
-    const [modalMessage, setModalMessage] = useState('');
-    const [modalType, setModalType] = useState<'success' | 'error'>('success');
-    const { modalStates, openModal, closeModal } = useModalState();
+    const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
 
-    // 제출 훅
-    const { send, loading: submitLoading } = useSendSelectedUniversities();
+    const rows = flattenUniversities(department);
 
-    // 필터링된 대학 목록
-    const filteredUniversities = useMemo(() => {
-        return universityList.filter((university) => {
-            const value = university[searchField as keyof University] ?? '';
-            const matchesSearch = value.toString().toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesRegion = selectedRegions.length === 0 || selectedRegions.includes(university.region);
-            return matchesSearch && matchesRegion;
-        });
-    }, [universityList, searchTerm, selectedRegions, searchField]);
+    // 지역 목록 추출
+    const regions = useMemo(
+        () => Array.from(new Set(rows.map(r => r.region).filter(Boolean))),
+        [rows]
+    );
 
-    // 지역 선택 토글
+    // 지역 필터 toggle
     const toggleRegion = (region: string) => {
         setSelectedRegions(prev =>
             prev.includes(region)
@@ -60,118 +74,64 @@ export default function UniversityListSection({ universityList }: UniversityList
                 : [...prev, region]
         );
     };
+    const clearRegionFilter = () => setSelectedRegions([]);
 
-    // 대학 선택 토글
-    const toggleUniversity = (universityIdx: number) => {
-        setSelectedUniversities(prev =>
-            prev.includes(universityIdx)
-                ? prev.filter(id => id !== universityIdx)
-                : [...prev, universityIdx]
-        );
-    };
-
-    // 전체 선택/해제
-    const toggleSelectAll = () => {
-        if (selectedUniversities.length === filteredUniversities.length) {
-            setSelectedUniversities([]);
-        } else {
-            setSelectedUniversities(filteredUniversities.map((_, idx) => idx));
+    // 검색/필터 적용
+    const filteredRows = useMemo(() => {
+        let filtered = rows;
+        if (selectedRegions.length > 0) {
+            filtered = filtered.filter(r => selectedRegions.includes(r.region));
         }
-    };
-
-    // 선택된 대학 제출
-    const handleExtractSelected = async () => {
-        const selectedData = filteredUniversities.filter((_, idx) => selectedUniversities.includes(idx));
-        try {
-            await send({ universities: selectedData as University[] });
-            setModalMessage(`${selectedData.length}개 대학이 성공적으로 제출되었습니다.`);
-            setModalType('success');
-            openModal('alert');
-        } catch (e) {
-            setModalMessage('제출에 실패했습니다.');
-            setModalType('error');
-            openModal('alert');
+        if (searchInput.trim()) {
+            filtered = filtered.filter(r => {
+                const key = searchField as keyof UniversityTableRow;
+                const value = r[key];
+                return (
+                    typeof value === "string" &&
+                    value.toLowerCase().includes(searchInput.trim().toLowerCase())
+                );
+            });
         }
+        return filtered;
+    }, [rows, selectedRegions, searchInput, searchField]);
+
+    const handleCheck = (admission_id: number) => {
+        setChecked(prev => ({ ...prev, [admission_id]: !prev[admission_id] }));
     };
 
-    // 지역 필터 초기화
-    const clearRegionFilter = () => {
-        setSelectedRegions([]);
-    };
-
-    // 검색 실행 함수
-    const handleSearch = () => {
-        setSearchTerm(searchInput);
-    };
-
-    // 엔터 입력 시 검색
+    // 검색 엔터키
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleSearch();
+        if (e.key === "Enter") {
+            // 필요시 검색 트리거
         }
+    };
+
+    const handleSearch = () => {
+        // 필요시 검색 트리거
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 min-h-[600px] my-4 ">
-            {/* 헤더 */}
-            <div className="border-b border-gray-200 px-6 py-4">
-                <div className="flex items-center w-full justify-between gap-4">
-                    {/* 검색바 */}
-                    <UniversityTableSearchBar
-                        searchInput={searchInput}
-                        setSearchInput={setSearchInput}
-                        handleInputKeyDown={handleInputKeyDown}
-                        searchField={searchField}
-                        setSearchField={setSearchField}
-                        handleSearch={handleSearch}
-                        searchFields={searchableFields as any}
-                    />
-                    {/* 지역 필터 및 제출 버튼 */}
-                    <div className="flex items-center gap-2">
-                        <UniversityTableRegionFilter
-                            selectedRegions={selectedRegions}
-                            setShowRegionFilter={setShowRegionFilter}
-                            showRegionFilter={showRegionFilter}
-                            regions={regions}
-                            toggleRegion={toggleRegion}
-                            clearRegionFilter={clearRegionFilter}
-                        />
-                        <button
-                            onClick={handleExtractSelected}
-                            disabled={selectedUniversities.length === 0 || submitLoading}
-                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${selectedUniversities.length > 0 && !submitLoading
-                                ? 'bg-violet-600 text-white hover:bg-violet-700'
-                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                }`}
-                        >
-                            <span>({selectedUniversities.length}) 개의 학교 선택</span>
-                            {submitLoading && <span className="ml-2">제출 중...</span>}
-                        </button>
-                    </div>
-                </div>
+        <div className="overflow-x-auto w-full bg-white rounded-lg p-4 shadow-md space-y-4 min-h-[500px]">
+            <div className="flex flex-row items-center justify-between mb-2">
+                <UniversityTableSearchBar
+                    searchInput={searchInput}
+                    setSearchInput={setSearchInput}
+                    handleInputKeyDown={handleInputKeyDown}
+                    searchField={searchField}
+                    setSearchField={setSearchField}
+                    handleSearch={handleSearch}
+                    searchFields={SEARCH_FIELDS}
+                />
+                <UniversityTableRegionFilter
+                    selectedRegions={selectedRegions}
+                    setShowRegionFilter={setShowRegionFilter}
+                    showRegionFilter={showRegionFilter}
+                    regions={regions}
+                    toggleRegion={toggleRegion}
+                    clearRegionFilter={clearRegionFilter}
+                />
             </div>
-
-            {/* 테이블 */}
-            <UniversityTable
-                universityList={filteredUniversities}
-                selectedUniversities={selectedUniversities}
-                setSelectedUniversities={setSelectedUniversities}
-            />
-
-            {/* 푸터 정보 */}
-            <div className="border-t border-gray-200 px-6 py-3 bg-gray-50">
-                <div className="flex items-center justify-between text-sm text-gray-600">
-                    <span>총 {filteredUniversities.length}개 대학</span>
-
-                </div>
-            </div>
-
-            <AlertModal
-                open={modalStates['alert']}
-                onClose={() => closeModal('alert')}
-                message={modalMessage}
-                type={modalType}
-            />
+            <UniversityTable rows={filteredRows} checked={checked} handleCheck={handleCheck} />
         </div>
     );
 }

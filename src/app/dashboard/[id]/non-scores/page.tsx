@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from 'next/navigation';
-import { useFetchStudents } from '@/app/main/_hooks/use-fetch-students';
+import { useFetchStudentsList } from '@/app/main/_hooks/use-fetch-students-list';
 import { Student } from '@/app/types/students';
 import { useStudentAllNonScore } from './_hooks/use-student-non-score';
 import NoDataMessage from '../../_components/NoDataMessage';
@@ -12,9 +12,9 @@ import StudentNonScoreSummaryDisplay from './_components/StudentNonScoreSummaryD
 
 export default function NonScoresPage() {
     const params = useParams();
-    const studentId = params.id as string;
-    const { students, loading: studentsLoading, error: studentsError } = useFetchStudents();
-    const { studentNonScores, loading: nonScoresLoading, error: nonScoresError } = useStudentAllNonScore(studentId);
+    const studentId = Number(params.id);
+    const { students, loading: studentsLoading, error: studentsError } = useFetchStudentsList();
+    const { studentNonScores, loading: nonScoresLoading, error: nonScoresError } = useStudentAllNonScore(studentId.toString());
 
     // 학생 목록 로딩 중인 경우
     if (studentsLoading || nonScoresLoading) {
@@ -23,7 +23,7 @@ export default function NonScoresPage() {
 
     // 학생 목록 에러가 발생한 경우
     if (studentsError) {
-        return <ErrorState message={studentsError} />;
+        return <ErrorState message={studentsError.message} />;
     }
 
     // 현재 학생 정보 찾기
@@ -43,8 +43,8 @@ export default function NonScoresPage() {
     if (!studentNonScores) {
         return (
             <NoDataMessage
-                title={`${currentStudent.studentName} 학생의 비교과 성적 없음`}
-                message={`${currentStudent.studentName} 학생의 성적 데이터가 없습니다.`}
+                title={`${currentStudent.name} 학생의 비교과 성적 없음`}
+                message={`${currentStudent.name} 학생의 성적 데이터가 없습니다.`}
             />
         );
     }

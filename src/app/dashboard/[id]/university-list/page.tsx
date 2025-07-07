@@ -3,36 +3,14 @@
 import UniversityListDisplay from "./_component/UniversityListDisplay";
 import LoadingState from "../../_components/LoadingState";
 import ErrorState from "../../_components/ErrorState";
-import { useFetchRecommendedUniversityList } from "./_hooks/use-fetch-recommended-university";
-import { useFetchStudents } from "@/app/main/_hooks/use-fetch-students";
-import StudentNotFound from "../../_components/StudentNotFound";
 import { useParams } from "next/navigation";
-import { Student } from "@/app/types/students";
+import { useFetchRecommendedUniversityList } from "./_hooks/use-fetch-recommended-university";
 
 export default function UniversityListPage() {
     const params = useParams();
-    const studentId = params.id as string;
+    const studentId = Number(params.id);
 
-    const { universityList, loading: universityListLoading, error: universityListError } = useFetchRecommendedUniversityList(studentId);
-    const { students, loading: studentsLoading, error: studentsError } = useFetchStudents();
-
-    // 학생과 추천 대학 목록 로딩 중인 경우
-    if (studentsLoading || universityListLoading) {
-        return <LoadingState data="학생과 추천 대학 목록 데이터" />;
-    }
-
-    // 학생 목록 에러가 발생한 경우
-    if (studentsError) {
-        return <ErrorState message={studentsError} />;
-    }
-
-    // 현재 학생 정보 찾기
-    const currentStudent = students.find((student: Student) => student.id === studentId);
-
-    // 학생을 찾을 수 없는 경우
-    if (!currentStudent) {
-        return <StudentNotFound />;
-    }
+    const { recommendedUniversityList, loading: universityListLoading, error: universityListError } = useFetchRecommendedUniversityList(studentId);
 
     // 대학 목록 로딩 중인 경우
     if (universityListLoading) {
@@ -44,6 +22,5 @@ export default function UniversityListPage() {
         return <ErrorState message={universityListError} />;
     }
 
-    // 대학 목록 데이터가 있는 경우
-    return <UniversityListDisplay student={currentStudent} universityList={universityList} />;
+    return <UniversityListDisplay studentId={studentId} recommendedUniversityList={recommendedUniversityList} />;
 } 

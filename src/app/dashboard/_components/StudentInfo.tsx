@@ -13,12 +13,12 @@ import {
 } from "lucide-react";
 
 interface StudentInfoProps {
-    student: Student;
+    student: Student | null;
     overallGrade: number;
 }
 
 export default function StudentInfo({ student, overallGrade }: StudentInfoProps) {
-    const [consultationDate, setConsultationDate] = useState(student.consultationDate || "");
+    const [consultationDate, setConsultationDate] = useState(student?.consultationDate || "");
 
     const handleConsultationDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setConsultationDate(e.target.value);
@@ -45,12 +45,12 @@ export default function StudentInfo({ student, overallGrade }: StudentInfoProps)
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden ">
             {/* 헤더 섹션 */}
             <div className="border-b border-gray-300 px-6 pt-6 pb-2">
                 <div className="flex items-center justify-between space-x-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-black">{student.studentName}</h1>
+                        <h1 className="text-3xl font-bold text-black">{student?.name}</h1>
                         <p className="text-gray-500 mt-1">학생 정보</p>
                     </div>
                     <div className="flex flex-row space-x-2 w-1/2 justify-end">
@@ -114,7 +114,7 @@ export default function StudentInfo({ student, overallGrade }: StudentInfoProps)
                                 <div>
                                     <p className="font-semibold text-gray-700">재학 중인 학교</p>
                                     <p className="text-gray-900 mt-1">
-                                        {student.currentSchool}
+                                        {student?.current_school_name}
                                     </p>
                                 </div>
                             </div>
@@ -145,11 +145,10 @@ export default function StudentInfo({ student, overallGrade }: StudentInfoProps)
                                 <GraduationCap className="w-5 h-5 text-red-500 mt-0.5" />
                                 <div className="flex-1">
                                     <p className="font-semibold text-gray-700">목표 대학</p>
-                                    {student.desiredSchool.map((school, index) => (
-                                        <p key={`school-${index}`} className=" text-gray-900 mt-1">
-                                            - {school}
-                                        </p>
-                                    ))}
+                                    {student?.desired_school
+                                        ? <span className="text-gray-900">{student?.desired_school}</span>
+                                        : <span>-</span>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -159,11 +158,10 @@ export default function StudentInfo({ student, overallGrade }: StudentInfoProps)
                                 <BookOpen className="w-5 h-5 text-red-500 mt-0.5" />
                                 <div className="flex-1">
                                     <p className="font-semibold text-gray-700">희망 전공</p>
-                                    {student.desiredMajor.map((major, index) => (
-                                        <p key={`major-${index}`} className="text-gray-900 mt-1">
-                                            - {major}
-                                        </p>
-                                    ))}
+                                    {student?.desired_department
+                                        ? <span className="text-gray-900">{student?.desired_department}</span>
+                                        : <span>-</span>
+                                    }
                                 </div>
                             </div>
                         </div>

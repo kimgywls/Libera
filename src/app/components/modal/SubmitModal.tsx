@@ -43,6 +43,7 @@ export default function SubmitModal({
     };
 
     if (!isOpen) return null;
+    console.log("🔥 SubmitModal 렌더링됨, isOpen:", isOpen, "modalType:", modalType);
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -70,6 +71,7 @@ export default function SubmitModal({
                 </div>
 
                 {modalType === "submit" && (
+                    console.log("🔥 SubmitModal 버튼 렌더링됨, modalType:", modalType),
                     <div className="flex justify-end space-x-3 mt-4 pt-4 border-t">
                         <button
                             onClick={onClose}
@@ -78,7 +80,7 @@ export default function SubmitModal({
                             취소
                         </button>
                         <button
-                            onClick={onSubmit}
+                            onClick={() => { console.log("🔥 SubmitModal 버튼 클릭됨"); onSubmit(); }}
                             className="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600"
                         >
                             제출하기

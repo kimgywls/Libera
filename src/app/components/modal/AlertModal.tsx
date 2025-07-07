@@ -10,7 +10,7 @@ interface AlertModalProps {
 const AlertModal: React.FC<AlertModalProps> = ({ open, onClose, message, type = 'success' }) => {
     if (!open) return null;
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg shadow-lg p-6 min-w-[300px] max-w-xs flex flex-col items-center">
                 <div className={`mb-4 text-2xl ${type === 'success' ? 'text-green-500' : 'text-red-500'}`}>{type === 'success' ? '✔️' : '❌'}</div>
                 <div className="mb-6 text-center text-gray-800 text-base whitespace-pre-line">{message}</div>

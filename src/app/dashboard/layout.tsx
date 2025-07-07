@@ -10,8 +10,9 @@ import {
     BarChart3,
 } from 'lucide-react';
 import { useParams } from "next/navigation";
-import { useFetchStudents } from "@/app/main/_hooks/use-fetch-students";
+import { useFetchStudentsList } from "@/app/main/_hooks/use-fetch-students-list";
 import { ReactNode } from "react";
+import { StudentProvider } from "@/app/dashboard/contexts/StudentContext";
 
 // 타입 정의
 interface NavItem {
@@ -29,8 +30,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     const pathname = usePathname();
     const router = useRouter();
     const { id } = useParams();
-    const { students } = useFetchStudents();
-    const selectedStudent = students.find((s) => s.id === id);
+    const { students } = useFetchStudentsList();
+    const selectedStudent = students.find((s) => s.id === Number(id));
 
     // 네비게이션 항목 정의
     const navigation: NavItem[] = [
@@ -127,7 +128,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     <div className="flex items-center justify-between h-16 px-6">
                         <div className="flex items-center space-x-4">
                             <h1 className="text-xl font-semibold text-gray-900">
-                                {selectedStudent?.studentName} 학생의 대시보드
+                                {selectedStudent?.name} 학생의 대시보드
                             </h1>
                         </div>
                     </div>
@@ -135,7 +136,13 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
                 {/* 페이지 컨텐츠 */}
                 <main className="flex-1 p-6">
-                    {children}
+                    {selectedStudent ? (
+                        <StudentProvider studentId={selectedStudent.id}>
+                            {children}
+                        </StudentProvider>
+                    ) : (
+                        <div>학생을 찾을 수 없습니다.</div>
+                    )}
                 </main>
             </div>
         </div>

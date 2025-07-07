@@ -1,15 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useStudentContext } from "../context/StudentContext";
+import { useStudentContext } from "./contexts/StudentContext";
 
 export default function DashboardPage() {
     const router = useRouter();
-    const { selectedStudent } = useStudentContext();
+    const { student } = useStudentContext();
 
     // 학생이 선택된 경우 해당 학생의 scores 페이지로 리다이렉트
-    if (selectedStudent) {
-        router.push(`/dashboard/${selectedStudent.id}/scores`);
+    if (student) {
+        router.push(`/dashboard/${student.id}/scores`);
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">

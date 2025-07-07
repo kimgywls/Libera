@@ -1,6 +1,6 @@
 import React from "react";
 import StudentExportPDF from "./StudentExportPDF";
-import { useStudentAllScores } from "@/app/dashboard/[id]/scores/_hooks/use-student-all-scores";
+import { useStudentScores } from "@/app/dashboard/[id]/scores/_hooks/use-scores";
 import { useStudentTotalGrade } from "@/app/dashboard/[id]/scores/_hooks/use-student-total-grade";
 import { getChartDataBySubject } from "@/app/dashboard/[id]/scores/_utils/getChartDataBySubject";
 import { DISPLAY_SUBJECTS } from "@/app/constants";
@@ -12,11 +12,11 @@ interface HiddenStudentPDFProps {
 }
 
 export default function HiddenStudentPDF({ student, pdfRef }: HiddenStudentPDFProps) {
-    const { studentCombinedScores } = useStudentAllScores(student.id);
-    const { studentTotalGrade } = useStudentTotalGrade(student.id);
+    const { scores } = useStudentScores(student.id.toString());
+    const { studentTotalGrade } = useStudentTotalGrade(student.id.toString());
 
-    const grades = studentCombinedScores?.subjectScores ?? [];
-    const mockTests = studentCombinedScores?.mockTestScores ?? {};
+    const grades = scores?.map(score => score.semester_scores) ?? [];
+    const mockTests = scores?.map(score => score.mock_test_scores) ?? {};
     const overallGrade = studentTotalGrade?.overallGrade ?? 0;
     const semesterGrades = studentTotalGrade?.bySemester ? studentTotalGrade.bySemester : undefined;
     const chartData = DISPLAY_SUBJECTS.map(subject => ({
